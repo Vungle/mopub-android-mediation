@@ -300,8 +300,14 @@ public class VungleBanner extends CustomEventBanner {
                     @Override
                     public void run() {
                         if (mCustomEventBannerListener != null) {
-                            mCustomEventBannerListener.onBannerClicked();
-                            MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
+
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mCustomEventBannerListener.onBannerClicked();
+                                    MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
+                                }
+                            });
                         }
                     }
                 });
