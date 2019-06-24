@@ -325,6 +325,7 @@ public class VungleBanner extends CustomEventBanner {
                         "Vungle banner ad logged impression. Placement id" + placementReferenceId);
                 mHandler.post(new Runnable() {
 
+<<<<<<< HEAD
                     @Override
                     public void run() {
                         if (mCustomEventBannerListener != null) {

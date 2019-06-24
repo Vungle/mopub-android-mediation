@@ -161,7 +161,7 @@ public class VungleRouter {
             case INITIALIZED:
                 if (isValidPlacement(placementId)) {
                     addRouterListener(placementId, routerListener);
-                    Vungle.loadAd(placementId, loadAdCallback);
+                    Vungle.loadAd(placementId, adConfig, loadAdCallback);
                 } else {
                     routerListener.onUnableToPlayAd(placementId, "Invalid/Inactive Placement Id");
                 }
