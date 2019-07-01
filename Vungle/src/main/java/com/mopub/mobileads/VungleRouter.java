@@ -114,7 +114,7 @@ public class VungleRouter {
             }
 
             @Override
-            public void onError(VungleException throwable) {
+            public void onError(Throwable throwable) {
                 MoPubLog.log(CUSTOM_WITH_THROWABLE, "Initialization failed.", throwable);
 
                 sInitState = SDKInitState.NOTINITIALIZED;
