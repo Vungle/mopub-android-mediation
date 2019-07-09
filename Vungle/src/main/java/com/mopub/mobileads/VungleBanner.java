@@ -374,8 +374,13 @@ public class VungleBanner extends CustomEventBanner {
                             public void run() {
                                 if (!mPendingRequestBanner.getAndSet(false)) {
                                     return;
+<<<<<<< HEAD
                                 }
 
+=======
+
+                                boolean isSuccess = false;
+>>>>>>> add placement id for logging
                                 final RelativeLayout layout = new RelativeLayout(mContext) {
                                     @Override
                                     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
