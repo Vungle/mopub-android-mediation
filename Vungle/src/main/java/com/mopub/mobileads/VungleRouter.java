@@ -23,6 +23,7 @@ import com.vungle.warren.Plugin;
 import com.vungle.warren.Vungle;
 import com.vungle.warren.VungleApiClient;
 import com.vungle.warren.VungleBanner;
+import com.vungle.warren.VungleNativeAd;
 import com.vungle.warren.VungleSettings;
 import com.vungle.warren.error.VungleException;
 
@@ -148,7 +149,7 @@ public class VungleRouter {
         return Vungle.isInitialized();
     }
 
-    void loadAdForPlacement(String placementId, VungleRouterListener routerListener) {
+    void loadAdForPlacement(String placementId, AdConfig adConfig, VungleRouterListener routerListener) {
         switch (sInitState) {
             case NOTINITIALIZED:
                 MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "loadAdForPlacement is called before " +
