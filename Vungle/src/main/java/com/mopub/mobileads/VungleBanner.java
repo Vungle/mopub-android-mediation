@@ -150,7 +150,7 @@ public class VungleBanner extends CustomEventBanner {
                 mVungleRouterListener.onAdAvailabilityUpdate(mPlacementId, true);
                 MoPubLog.log(mPlacementId, LOAD_SUCCESS, ADAPTER_NAME);
             } else {
-                sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRouterListener);
+                sVungleRouter.loadAdForPlacement(mPlacementId, mAdConfig, mVungleRouterListener);
                 MoPubLog.log(mPlacementId, LOAD_ATTEMPTED, ADAPTER_NAME);
             }
         } else {
@@ -337,7 +337,7 @@ public class VungleBanner extends CustomEventBanner {
                 if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
                     sVungleRouter.loadBannerAd(mPlacementId, mAdConfig.getAdSize(), mVungleRouterListener);
                 } else if (VUNGLE_MREC == mAdConfig.getAdSize()) {
-                    sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRouterListener);
+                    sVungleRouter.loadAdForPlacement(mPlacementId, mAdConfig, mVungleRouterListener);
                 }
             }
         }
@@ -374,13 +374,8 @@ public class VungleBanner extends CustomEventBanner {
                             public void run() {
                                 if (!mPendingRequestBanner.getAndSet(false)) {
                                     return;
-<<<<<<< HEAD
                                 }
 
-=======
-
-                                boolean isSuccess = false;
->>>>>>> add placement id for logging
                                 final RelativeLayout layout = new RelativeLayout(mContext) {
                                     @Override
                                     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
