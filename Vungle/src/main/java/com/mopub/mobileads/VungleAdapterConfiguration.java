@@ -29,6 +29,8 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
 
     private static VungleRouter sVungleRouter;
 
+    public static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
+
     public VungleAdapterConfiguration() {
         sVungleRouter = VungleRouter.getInstance();
     }
