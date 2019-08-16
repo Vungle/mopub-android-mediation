@@ -227,9 +227,10 @@ public class VungleBanner extends CustomEventBanner {
             mVungleMrecAd.finishDisplayingAd();
             mVungleMrecAd = null;
         }
-        if (vungleMrecAd != null) {
-            Views.removeFromParent(vungleMrecAd.renderNativeView());
-            vungleMrecAd.finishDisplayingAd();
+        if (mVungleMrecAd != null) {
+            Views.removeFromParent(mVungleMrecAd.renderNativeView());
+            mVungleMrecAd.finishDisplayingAd();
+            mVungleMrecAd = null;
         }
 
         if (sVungleRouter != null) {
