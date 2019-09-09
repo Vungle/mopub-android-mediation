@@ -121,7 +121,7 @@ public class VungleInterstitial extends CustomEventInterstitial {
             VungleMediationConfiguration.adConfigWithLocalExtras(mAdConfig, localExtras);
         }
 
-        sVungleRouter.loadAdForPlacement(mPlacementId, mAdConfig, mVungleRouterListener);
+        sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRouterListener);
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);
     }
 
