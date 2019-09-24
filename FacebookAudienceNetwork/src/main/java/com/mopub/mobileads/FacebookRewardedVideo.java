@@ -2,15 +2,16 @@ package com.mopub.mobileads;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AudienceNetworkAds;
 import com.facebook.ads.RewardedVideoAd;
-import com.facebook.ads.RewardedVideoAdListener;
+import com.facebook.ads.RewardedVideoAdExtendedListener;
 import com.mopub.common.DataKeys;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPubReward;
@@ -30,7 +31,7 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_SUCCESS;
 import static com.mopub.mobileads.MoPubErrorCode.EXPIRED;
 
-public class FacebookRewardedVideo extends CustomEventRewardedVideo implements RewardedVideoAdListener {
+public class FacebookRewardedVideo extends CustomEventRewardedVideo implements RewardedVideoAdExtendedListener {
 
     private static final int ONE_HOURS_MILLIS = 60 * 60 * 1000;
     private static final String ADAPTER_NAME = FacebookRewardedVideo.class.getSimpleName();
@@ -53,7 +54,7 @@ public class FacebookRewardedVideo extends CustomEventRewardedVideo implements R
             @Override
             public void run() {
                 MoPubLog.log(CUSTOM, ADAPTER_NAME, "Expiring unused Facebook Rewarded Video ad due to Facebook's 60-minute expiration policy.");
-                MoPubRewardedVideoManager.onRewardedVideoLoadFailure(FacebookRewardedVideo.class, mPlacementId, EXPIRED);
+                MoPubRewardedVideoManager.onRewardedVideoPlaybackError(FacebookRewardedVideo.class, mPlacementId, EXPIRED);
                 MoPubLog.log(LOAD_FAILED, ADAPTER_NAME, MoPubErrorCode.EXPIRED.getIntCode(), MoPubErrorCode.EXPIRED);
 
                 onInvalidate();
@@ -139,7 +140,8 @@ public class FacebookRewardedVideo extends CustomEventRewardedVideo implements R
 
     @Override
     protected boolean hasVideoAvailable() {
-        return mRewardedVideoAd != null && mRewardedVideoAd.isAdLoaded();
+        return mRewardedVideoAd != null && mRewardedVideoAd.isAdLoaded()
+                && !mRewardedVideoAd.isAdInvalidated();
     }
 
     @Override
@@ -192,6 +194,11 @@ public class FacebookRewardedVideo extends CustomEventRewardedVideo implements R
         MoPubRewardedVideoManager.onRewardedVideoLoadFailure(FacebookRewardedVideo.class, mPlacementId, mapErrorCode(adError.getErrorCode()));
         MoPubLog.log(CUSTOM, ADAPTER_NAME, "Loading/Playing Facebook Rewarded Video creative encountered an error: " + mapErrorCode(adError.getErrorCode()).toString());
         MoPubLog.log(LOAD_FAILED, ADAPTER_NAME, mapErrorCode(adError.getErrorCode()), mapErrorCode(adError.getErrorCode()).toString());
+    }
+
+    @Override
+    public void onRewardedVideoActivityDestroyed() {
+        MoPubRewardedVideoManager.onRewardedVideoClosed(FacebookRewardedVideo.class, mPlacementId);
     }
 
     @NonNull

@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.applovin.adview.AppLovinAdView;
 import com.applovin.adview.AppLovinAdViewDisplayErrorCode;
@@ -254,7 +255,7 @@ public class AppLovinBanner extends CustomEventBanner {
                 if (width >= 728 && height >= 90) {
                     adSize = AppLovinAdSize.LEADER;
                 } else if (width >= 300 && height >= 250) {
-                 // Size can contain an AppLovin medium rectangle
+                    // Size can contain an AppLovin medium rectangle
                     adSize = AppLovinAdSize.MREC;
                 }
             } else {
