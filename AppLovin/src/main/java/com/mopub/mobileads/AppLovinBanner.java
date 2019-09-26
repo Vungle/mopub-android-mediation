@@ -38,19 +38,11 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_SUCCESS;
 
 public class AppLovinBanner extends CustomEventBanner {
 
-    private static final Handler UI_HANDLER = new Handler(Looper.getMainLooper());
-
-    private static final int BANNER_STANDARD_HEIGHT = 50;
-    private static final int BANNER_HEIGHT_OFFSET_TOLERANCE = 10;
-    private static final int LEADER_STANDARD_HEIGHT = 90;
-    private static final int LEADER_HEIGHT_OFFSET_TOLERANCE = 16;
-
+    private static final String ADAPTER_NAME = AppLovinBanner.class.getSimpleName();
     private static final String AD_WIDTH_KEY = "com_mopub_ad_width";
     private static final String AD_HEIGHT_KEY = "com_mopub_ad_height";
-
+    private static final Handler UI_HANDLER = new Handler(Looper.getMainLooper());
     private static final String ZONE_ID_SERVER_EXTRAS_KEY = "zone_id";
-
-    private static final String ADAPTER_NAME = AppLovinBanner.class.getSimpleName();
 
     @NonNull
     private AppLovinAdapterConfiguration mAppLovinAdapterConfiguration;
