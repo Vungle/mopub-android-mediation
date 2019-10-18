@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Keep;
@@ -472,6 +473,25 @@ public class VungleBanner extends CustomEventBanner {
                     }
                 }
             }
+        }
+    }
+
+    private void applyFixes(final View adView) {
+        //Fix for Unity Player that can't render a view with a state changed from INVISIBLE to VISIBLE.
+        //TODO: Remove once it's fixed on the Vungle SDK side.
+        if (adView instanceof ViewGroup) {
+            ((ViewGroup) adView).addView(new View(mContext) {
+                private int oldState = adView.getVisibility();
+
+                @Override
+                protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+                    super.onVisibilityChanged(changedView, visibility);
+                    if (INVISIBLE == oldState) {
+                        adView.requestLayout();
+                    }
+                    oldState = visibility;
+                }
+            });
         }
     }
 }
