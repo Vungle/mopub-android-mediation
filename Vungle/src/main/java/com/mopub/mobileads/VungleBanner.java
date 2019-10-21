@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.mopub.mobileads;
 
 import android.content.Context;
@@ -38,6 +39,36 @@ import static java.lang.Math.ceil;
 
 @Keep
 public class VungleBanner extends CustomEventBanner {
+=======
+ package com.mopub.mobileads;
+
+ import android.content.Context;
+ import android.graphics.Color;
+ import android.os.Handler;
+ import android.os.Looper;
+ import androidx.annotation.Keep;
+ import androidx.annotation.NonNull;
+ import android.text.TextUtils;
+ import android.view.View;
+ import android.widget.RelativeLayout;
+
+ import com.mopub.common.logging.MoPubLog;
+ import com.mopub.common.util.Views;
+ import com.vungle.warren.AdConfig;
+ import com.vungle.warren.VungleNativeAd;
+
+ import java.util.Map;
+ import java.util.concurrent.atomic.AtomicBoolean;
+
+ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
+ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
+ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_ATTEMPTED;
+ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
+ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
+
+ @Keep
+ public class VungleBanner extends CustomEventBanner {
+>>>>>>> [AND-2389] fix using setBackgroundColor call
 
     private static final String ADAPTER_NAME = VungleBanner.class.getSimpleName();
     /*
@@ -400,6 +431,7 @@ public class VungleBanner extends CustomEventBanner {
                                         }
                                     }
                                 };
+<<<<<<< HEAD
 
                                 //Fix for Unity Player that can't render a view with a state changed from INVISIBLE to VISIBLE.
                                 //TODO: Remove once it's fixed in MoPub Unity plugin.
@@ -442,6 +474,17 @@ public class VungleBanner extends CustomEventBanner {
 
                                 if (loadSucceeded) {
                                     if (mCustomEventBannerListener != null) {
+=======
+                                //Fix for Unity Player that can't render a view with a state changed from INVISIBLE to VISIBLE.
+                                //TODO: Remove once it's fixed in MoPub Unity plugin.
+                                layout.setBackgroundColor(Color.TRANSPARENT);
+                                vungleBannerAd = sVungleRouter.getVungleBannerAd(placementReferenceId, adConfig);
+                                if(vungleBannerAd != null) {
+                                    final View adView = vungleBannerAd.renderNativeView();
+                                    if (adView != null) {
+                                        isSuccess = true;
+                                        layout.addView(adView);
+>>>>>>> [AND-2389] fix using setBackgroundColor call
                                         mCustomEventBannerListener.onBannerLoaded(layout);
                                         MoPubLog.log(LOAD_SUCCESS, ADAPTER_NAME);
                                     }
@@ -473,25 +516,6 @@ public class VungleBanner extends CustomEventBanner {
                     }
                 }
             }
-        }
-    }
-
-    private void applyFixes(final View adView) {
-        //Fix for Unity Player that can't render a view with a state changed from INVISIBLE to VISIBLE.
-        //TODO: Remove once it's fixed on the Vungle SDK side.
-        if (adView instanceof ViewGroup) {
-            ((ViewGroup) adView).addView(new View(mContext) {
-                private int oldState = adView.getVisibility();
-
-                @Override
-                protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-                    super.onVisibilityChanged(changedView, visibility);
-                    if (INVISIBLE == oldState) {
-                        adView.requestLayout();
-                    }
-                    oldState = visibility;
-                }
-            });
         }
     }
 }
