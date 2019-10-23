@@ -125,21 +125,6 @@ public class VungleInterstitial extends CustomEventInterstitial {
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);
     }
 
-    static void adConfigWithLocalExtras(AdConfig adConfig, Map<String, Object> localExtras) {
-        Object isSoundEnabled = localExtras.get(SOUND_ENABLED_KEY);
-        if (isSoundEnabled instanceof Boolean)
-            adConfig.setMuted(!(Boolean) isSoundEnabled);
-        Object flexViewCloseTimeInSec = localExtras.get(FLEX_VIEW_CLOSE_TIME_KEY);
-        if (flexViewCloseTimeInSec instanceof Integer)
-            adConfig.setFlexViewCloseTime((Integer) flexViewCloseTimeInSec);
-        Object ordinalViewCount = localExtras.get(ORDINAL_VIEW_COUNT_KEY);
-        if (ordinalViewCount instanceof Integer)
-            adConfig.setOrdinal((Integer) ordinalViewCount);
-        Object adOrientation = localExtras.get(AD_ORIENTATION_KEY);
-        if (adOrientation instanceof Integer)
-            adConfig.setAdOrientation((Integer) adOrientation);
-    }
-
     @Override
     protected void showInterstitial() {
         MoPubLog.log(getAdNetworkId(), SHOW_ATTEMPTED, ADAPTER_NAME);
