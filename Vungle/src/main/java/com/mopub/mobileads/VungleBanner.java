@@ -135,6 +135,8 @@ public class VungleBanner extends CustomEventBanner {
             mAdConfig.setMuted(true); // start muted by default
         }
 
+        sVungleRouter.addRouterListener(mPlacementId, mVungleRouterListener);
+
         if (AdSize.isBannerAdSize(vungleAdSize)) {
             if (sVungleRouter.isBannerAdPlayable(mPlacementId, vungleAdSize)) {
                 mVungleRouterListener.onAdAvailabilityUpdate(mPlacementId, true);
