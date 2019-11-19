@@ -244,10 +244,6 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
      * VungleRewardedRouterListener
      */
     private class VungleRewardedRouterListener implements VungleRouterListener {
-        @Override
-        public void onAdEnd(@NonNull String placementReferenceId, final boolean wasSuccessfulView, final boolean wasCallToActionClicked) {
-            //Deprecated event
-        }
 
         @Override
         public void onAdEnd(String id) {
