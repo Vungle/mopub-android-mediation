@@ -54,6 +54,7 @@ public class VungleBanner extends CustomEventBanner {
 
  import com.mopub.common.logging.MoPubLog;
  import com.mopub.common.util.Views;
+ import com.mopub.mobileads.VungleRewardedVideo.VungleMediationSettings;
  import com.vungle.warren.AdConfig;
  import com.vungle.warren.VungleNativeAd;
 
@@ -169,11 +170,17 @@ public class VungleBanner extends CustomEventBanner {
 
         sVungleRouter.addRouterListener(mPlacementId, mVungleRouterListener);
 
+<<<<<<< HEAD
         Object isSoundEnabled = localExtras.get(VungleInterstitial.SOUND_ENABLED_KEY);
         if (isSoundEnabled instanceof Boolean) {
             mAdConfig.setMuted(!(Boolean) isSoundEnabled);
         } else {
             mAdConfig.setMuted(true); // start muted by default
+=======
+        VungleMediationSettings.adConfigWithLocalExtras(adConfig, localExtras);
+        if (VungleMediationSettings.isStartMutedNotConfigured(localExtras)) {
+            adConfig.setMuted(true); // start muted by default
+>>>>>>> [AND-2530] Mopub mediation settings improvement.
         }
 
         if (AdSize.isBannerAdSize(vungleAdSize)) {
