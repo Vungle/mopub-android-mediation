@@ -8,7 +8,6 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.mopub.common.logging.MoPubLog;
-import com.mopub.mobileads.VungleRewardedVideo.VungleMediationSettings;
 import com.vungle.warren.AdConfig;
 
 import java.util.Map;

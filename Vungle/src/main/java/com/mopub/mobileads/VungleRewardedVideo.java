@@ -13,7 +13,6 @@ import com.mopub.common.MoPubReward;
 import com.mopub.common.logging.MoPubLog;
 import com.vungle.warren.AdConfig;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
