@@ -203,6 +203,12 @@ public class VungleBanner extends CustomEventBanner {
                     + adWidthInDp + "x" + adHeightInDp + " adUnitFormat is:" + adUnitFormat);
         }
 
+        if (adSizeType == null) {
+            MoPubLog.log(CUSTOM, ADAPTER_NAME, "no matched ad size for requesting ad size:" + adWidthInDp + "x" + adHeightInDp);
+        } else {
+            MoPubLog.log(CUSTOM, ADAPTER_NAME, "matched ad size:" + adSizeType + " for requesting ad size:" + adWidthInDp + "x" + adHeightInDp);
+        }
+
         return adSizeType;
     }
 
