@@ -180,6 +180,7 @@ public class VungleBanner extends CustomEventBanner {
         if (!TextUtils.isEmpty(adUnitFormat)) {
             adUnitFormat = adUnitFormat.toLowerCase();
         }
+
         final boolean isMRECFormat = "medium_rectangle".equals(adUnitFormat);
         if (isMRECFormat) {
             if (adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight()) {

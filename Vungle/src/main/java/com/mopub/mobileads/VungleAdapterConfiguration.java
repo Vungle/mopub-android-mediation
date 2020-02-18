@@ -26,7 +26,6 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     // Adapter's keys
     private static final String ADAPTER_NAME = VungleAdapterConfiguration.class.getSimpleName();
     private static final String MOPUB_NETWORK_NAME = BuildConfig.NETWORK_NAME;
-
     private static VungleRouter sVungleRouter;
 
     public VungleAdapterConfiguration() {
@@ -64,14 +63,11 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
         Preconditions.checkNotNull(listener);
 
         applyVungleNetworkSettings(configuration);
-
         boolean networkInitializationSucceeded = false;
-
         synchronized (VungleAdapterConfiguration.class) {
             try {
                 if (Vungle.isInitialized()) {
                     networkInitializationSucceeded = true;
-
                 } else if (configuration != null && sVungleRouter != null) {
                     final String mAppId = configuration.get(APP_ID_KEY);
                     if (TextUtils.isEmpty(mAppId)) {
@@ -83,7 +79,6 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
                     }
                     if (!sVungleRouter.isVungleInitialized()) {
                         sVungleRouter.initVungle(context, mAppId);
-
                         networkInitializationSucceeded = true;
                     }
                 }

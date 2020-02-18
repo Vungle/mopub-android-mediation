@@ -59,7 +59,6 @@ public class VungleInterstitial extends CustomEventInterstitial {
     private AdConfig mAdConfig;
     private boolean mIsPlaying;
 
-
     public VungleInterstitial() {
         mHandler = new Handler(Looper.getMainLooper());
         sVungleRouter = VungleRouter.getInstance();
@@ -87,10 +86,8 @@ public class VungleInterstitial extends CustomEventInterstitial {
                             MoPubErrorCode.NETWORK_NO_FILL);
                 }
             });
-
             return;
         }
-
         if (!validateIdsInServerExtras(serverExtras)) {
             mHandler.post(new Runnable() {
                 @Override
@@ -102,20 +99,17 @@ public class VungleInterstitial extends CustomEventInterstitial {
                             MoPubErrorCode.NETWORK_NO_FILL);
                 }
             });
-
             return;
         }
 
         if (mVungleRouterListener == null) {
             mVungleRouterListener = new VungleInterstitialRouterListener();
         }
-
         if (!sVungleRouter.isVungleInitialized()) {
             // No longer passing the placement IDs (pids) param per Vungle 6.3.17
             sVungleRouter.initVungle(context, mAppId);
             mVungleAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
         }
-
         if (localExtras != null) {
             mAdConfig = new AdConfig();
             VungleMediationConfiguration.adConfigWithLocalExtras(mAdConfig, localExtras);
@@ -130,12 +124,11 @@ public class VungleInterstitial extends CustomEventInterstitial {
         MoPubLog.log(getAdNetworkId(), SHOW_ATTEMPTED, ADAPTER_NAME);
 
         if (sVungleRouter.isAdPlayableForPlacement(mPlacementId)) {
-
             sVungleRouter.playAdForPlacement(mPlacementId, mAdConfig);
             mIsPlaying = true;
         } else {
-            MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "SDK tried to show a Vungle interstitial ad before it " +
-                    "finished loading. Please try again.");
+            MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME,
+                    "SDK tried to show a Vungle interstitial ad before it finished loading. Please try again.");
             mHandler.post(new Runnable() {
 
                 @Override
@@ -251,13 +244,11 @@ public class VungleInterstitial extends CustomEventInterstitial {
                 MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME,
                         "onAdStart - Placement ID: " + placementReferenceId);
                 mIsPlaying = true;
-
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         mCustomEventInterstitialListener.onInterstitialShown();
                         mCustomEventInterstitialListener.onInterstitialImpression();
-
                         MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
                     }
                 });
@@ -270,12 +261,10 @@ public class VungleInterstitial extends CustomEventInterstitial {
                 MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onUnableToPlayAd - Placement ID: " +
                         placementReferenceId + ", reason: " + reason);
                 mIsPlaying = false;
-
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         mCustomEventInterstitialListener.onInterstitialFailed(MoPubErrorCode.NETWORK_NO_FILL);
-
                         MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
                                 MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
                                 MoPubErrorCode.NETWORK_NO_FILL);
@@ -305,7 +294,6 @@ public class VungleInterstitial extends CustomEventInterstitial {
                             @Override
                             public void run() {
                                 mCustomEventInterstitialListener.onInterstitialFailed(MoPubErrorCode.NETWORK_NO_FILL);
-
                                 MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
                                         MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
                                         MoPubErrorCode.NETWORK_NO_FILL);
