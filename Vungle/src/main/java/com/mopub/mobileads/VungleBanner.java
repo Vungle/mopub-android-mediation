@@ -33,6 +33,7 @@ import static com.vungle.warren.AdConfig.AdSize.BANNER;
 import static com.vungle.warren.AdConfig.AdSize.BANNER_LEADERBOARD;
 import static com.vungle.warren.AdConfig.AdSize.BANNER_SHORT;
 import static com.vungle.warren.AdConfig.AdSize.VUNGLE_MREC;
+import static java.lang.Math.ceil;
 
 @Keep
 public class VungleBanner extends CustomEventBanner {
@@ -383,7 +384,14 @@ public class VungleBanner extends CustomEventBanner {
                                         View adView = mVungleMrecAd.renderNativeView();
                                         if (adView != null) {
                                             isLoadSuccess = true;
-                                            layout.addView(adView);
+                                            float density = mContext.getResources().getDisplayMetrics().density;
+                                            int width = (int) ceil(VUNGLE_MREC.getWidth() * density);
+                                            int height = (int) ceil(VUNGLE_MREC.getHeight() * density);
+                                            RelativeLayout mrecViewWrapper = new RelativeLayout(mContext);
+                                            mrecViewWrapper.addView(adView);
+                                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+                                            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                                            layout.addView(mrecViewWrapper, params);
                                         }
                                     }
                                 }
