@@ -129,7 +129,7 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
             MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);
         } else {
             MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME,
-                    "There should not be this case. loadWithSdkInitialized is called before the SDK starts " +
+                    "Vungle SDK is not initialized. Load is called before the SDK completes " +
                             "initialization for Placement ID: " + mPlacementId);
             MoPubRewardedVideoManager.onRewardedVideoLoadFailure(VungleRewardedVideo.class, mPlacementId,
                     MoPubErrorCode.NETWORK_NO_FILL);

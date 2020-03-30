@@ -371,6 +371,7 @@ public class VungleBanner extends CustomEventBanner {
                                 //TODO: Remove once it's fixed in MoPub Unity plugin.
                                 layout.setBackgroundColor(Color.TRANSPARENT);
                                 boolean loadSucceeded = false;
+
                                 if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
                                     mVungleBannerAd = sVungleRouter.getVungleBannerAd(placementReferenceId,
                                             mAdConfig.getAdSize());
