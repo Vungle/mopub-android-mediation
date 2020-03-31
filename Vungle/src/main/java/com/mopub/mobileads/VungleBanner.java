@@ -270,27 +270,41 @@ public class VungleBanner extends CustomEventBanner {
     private class VungleBannerRouterListener implements VungleRouterListener {
 
         @Override
-        public void onAdEnd(@NonNull String placementReferenceId, boolean wasSuccessfulView,
-                            final boolean wasCallToActionClicked) {
-            MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd placement id" + placementReferenceId);
-            if (mPlacementId.equals(placementReferenceId)) {
-                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " +
-                        placementReferenceId + ", wasSuccessfulView: " + wasSuccessfulView +
-                        ", wasCallToActionClicked: " + wasCallToActionClicked);
+        public void onAdEnd(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd placement id: " + placementId);
                 mIsPlaying = false;
                 sVungleRouter.removeRouterListener(mPlacementId);
                 mVungleRouterListener = null;
+            }
+        }
+
+        @Override
+        public void onAdClick(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdClick placement id: " + placementId);
                 mHandler.post(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (wasCallToActionClicked && mCustomEventBannerListener != null) {
+                        if (mCustomEventBannerListener != null) {
                             mCustomEventBannerListener.onBannerClicked();
                             MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
                         }
                     }
                 });
             }
+        }
+
+        @Override
+        public void onAdRewarded(String placementId) {
+            //nothing to do
+        }
+
+        @Override
+        public void onAdLeftApplication(String placementId) {
+            //Nothing to do. If we invoke mCustomEventBannerListener.onLeaveApplication() it will cause
+            // onBannerClicked() event be called twice.
         }
 
         @Override

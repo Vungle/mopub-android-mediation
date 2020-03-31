@@ -15,12 +15,10 @@ import com.vungle.warren.AdConfig;
 
 import java.util.Map;
 
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_ATTEMPTED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOULD_REWARD;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_ATTEMPTED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_SUCCESS;
 
@@ -231,30 +229,40 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
      * VungleRewardedRouterListener
      */
     private class VungleRewardedRouterListener implements VungleRouterListener {
+
         @Override
-        public void onAdEnd(@NonNull String placementReferenceId, final boolean wasSuccessfulView,
-                            final boolean wasCallToActionClicked) {
-            if (mPlacementId.equals(placementReferenceId)) {
-                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " +
-                        placementReferenceId + ", wasSuccessfulView: " + wasSuccessfulView +
-                        ", wasCallToActionClicked: " + wasCallToActionClicked);
+        public void onAdEnd(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " + placementId);
                 mIsPlaying = false;
-                if (wasSuccessfulView) {
-                    MoPubLog.log(getAdNetworkId(), SHOULD_REWARD, ADAPTER_NAME, MoPubReward.NO_REWARD_AMOUNT,
-                            MoPubReward.NO_REWARD_LABEL);
-                    // Vungle does not provide a callback when a user should be rewarded.
-                    // You will need to provide your own reward logic if you receive a reward with
-                    // "NO_REWARD_LABEL" && "NO_REWARD_AMOUNT"
-                    MoPubRewardedVideoManager.onRewardedVideoCompleted(VungleRewardedVideo.class, mPlacementId,
-                            MoPubReward.success(MoPubReward.NO_REWARD_LABEL, MoPubReward.NO_REWARD_AMOUNT));
-                }
-                if (wasCallToActionClicked) {
-                    MoPubRewardedVideoManager.onRewardedVideoClicked(VungleRewardedVideo.class, mPlacementId);
-                    MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
-                }
                 MoPubRewardedVideoManager.onRewardedVideoClosed(VungleRewardedVideo.class, mPlacementId);
                 sVungleRouter.removeRouterListener(mPlacementId);
             }
+        }
+
+        @Override
+        public void onAdClick(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdClick - Placement ID: " + placementId);
+                MoPubRewardedVideoManager.onRewardedVideoClicked(VungleRewardedVideo.class, mPlacementId);
+            }
+        }
+
+        @Override
+        public void onAdRewarded(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdReward - Placement ID: " + placementId);
+                // Vungle does not provide a callback when a user should be rewarded.
+                // You will need to provide your own reward logic if you receive a reward with
+                // "NO_REWARD_LABEL" && "NO_REWARD_AMOUNT"
+                MoPubRewardedVideoManager.onRewardedVideoCompleted(VungleRewardedVideo.class, mPlacementId,
+                        MoPubReward.success(MoPubReward.NO_REWARD_LABEL, MoPubReward.NO_REWARD_AMOUNT));
+            }
+        }
+
+        @Override
+        public void onAdLeftApplication(String placementId) {
+            //nothing to do
         }
 
         @Override
