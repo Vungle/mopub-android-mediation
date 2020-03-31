@@ -198,9 +198,9 @@ public class VungleInterstitial extends CustomEventInterstitial {
     private class VungleInterstitialRouterListener implements VungleRouterListener {
 
         @Override
-        public void onAdEnd(String id) {
-            if (mPlacementId.equals(id)) {
-                MoPubLog.log(CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " + id);
+        public void onAdEnd(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " + placementId);
                 mIsPlaying = false;
                 mHandler.post(new Runnable() {
                     @Override
@@ -213,27 +213,26 @@ public class VungleInterstitial extends CustomEventInterstitial {
         }
 
         @Override
-        public void onAdClick(String id) {
-            if (mPlacementId.equals(id)) {
-                MoPubLog.log(CUSTOM, ADAPTER_NAME, "onAdClick - Placement ID: " + id);
-                mIsPlaying = false;
+        public void onAdClick(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdClick - Placement ID: " + placementId);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
                         mCustomEventInterstitialListener.onInterstitialClicked();
-                        MoPubLog.log(CLICKED, ADAPTER_NAME);
                     }
                 });
             }
         }
 
         @Override
-        public void onAdRewarded(String id) {
+        public void onAdRewarded(String placementId) {
             //nothing to do
         }
 
         @Override
-        public void onAdLeftApplication(String id) {
+        public void onAdLeftApplication(String placementId) {
             //Nothing to do. If we call mCustomEventInterstitialListener.onLeaveApplication() it will cause
             // onInterstitialClicked() event be called twice.
         }

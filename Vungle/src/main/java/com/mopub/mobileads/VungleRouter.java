@@ -264,14 +264,16 @@ public class VungleRouter {
     }
 
     private final PlayAdCallback playAdCallback = new PlayAdCallback() {
+
         @Override
+        @Deprecated
         public void onAdEnd(String id, boolean completed, boolean isCTAClicked) {
             //Deprecated event
         }
 
         @Override
         public void onAdEnd(String id) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " + id);
+            MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " + id);
             VungleRouterListener targetListener = sVungleRouterListeners.get(id);
             if (targetListener != null) {
                 targetListener.onAdEnd(id);
@@ -283,7 +285,7 @@ public class VungleRouter {
 
         @Override
         public void onAdClick(String id) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "onAdClick - Placement ID: " + id);
+            MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "onAdClick - Placement ID: " + id);
             VungleRouterListener targetListener = sVungleRouterListeners.get(id);
             if (targetListener != null) {
                 targetListener.onAdClick(id);
@@ -295,7 +297,7 @@ public class VungleRouter {
 
         @Override
         public void onAdRewarded(String id) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "onAdRewarded - Placement ID: " + id);
+            MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "onAdRewarded - Placement ID: " + id);
             VungleRouterListener targetListener = sVungleRouterListeners.get(id);
             if (targetListener != null) {
                 targetListener.onAdRewarded(id);
@@ -307,7 +309,7 @@ public class VungleRouter {
 
         @Override
         public void onAdLeftApplication(String id) {
-            MoPubLog.log(CUSTOM, ADAPTER_NAME, "onAdLeftApplication - Placement ID: " + id);
+            MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "onAdLeftApplication - Placement ID: " + id);
             VungleRouterListener targetListener = sVungleRouterListeners.get(id);
             if (targetListener != null) {
                 targetListener.onAdLeftApplication(id);
