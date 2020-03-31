@@ -1,4 +1,41 @@
 ## Changelog
+ * 9.11.6.0
+    * This version of the adapters has been certified with AppLovin 9.11.6 and MoPub SDK 5.11.1.
+
+ * 9.11.5.0
+    * This version of the adapters has been certified with AppLovin 9.11.5 and MoPub SDK 5.11.1.
+
+ * 9.11.4.0
+    * This version of the adapters has been certified with AppLovin 9.11.4.
+
+ * 9.11.2.0
+    * This version of the adapters has been certified with AppLovin 9.11.2.
+
+ * 9.11.1.0
+    * This version of the adapters has been certified with AppLovin 9.11.1.
+
+ * 9.10.4.1
+    * Log the AppLovin zone id in ad lifecycle events.
+    * Map additional error codes for failure cases.
+
+ * 9.10.4.0
+    * This version of the adapters has been certified with AppLovin 9.10.4.
+
+ * 9.10.3.0
+    * This version of the adapters has been certified with AppLovin 9.10.3.
+
+ * 9.10.2.0
+    * This version of the adapters has been certified with AppLovin 9.10.2.
+
+ * 9.10.1.0
+    * This version of the adapters has been certified with AppLovin 9.10.1.
+
+ * 9.9.2.1
+    * Fail fast when the AppLovin SDK Key is not inputted.
+
+ * 9.9.2.0
+    * This version of the adapters has been certified with AppLovin 9.9.2.
+
  * 9.9.1.0
     * This version of the adapters has been certified with AppLovin 9.9.1.
 

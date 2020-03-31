@@ -4,17 +4,12 @@ import androidx.annotation.NonNull;
 
 public interface VungleRouterListener {
 
-    void onAdEnd(String id);
+    void onAdEnd(@NonNull String placementId, boolean wasSuccessfulView, boolean wasCallToActionClicked);
 
-    void onAdClick(String id);
+    void onAdStart(@NonNull String placementId);
 
-    void onAdRewarded(String id);
+    void onUnableToPlayAd(@NonNull String placementId, String reason);
 
-    void onAdLeftApplication(String id);
+    void onAdAvailabilityUpdate(@NonNull String placementId, boolean isAdAvailable);
 
-    void onAdStart(@NonNull String var1);
-
-    void onUnableToPlayAd(@NonNull String var1, String var2);
-
-    void onAdAvailabilityUpdate(@NonNull String var1, boolean var2);
 }
