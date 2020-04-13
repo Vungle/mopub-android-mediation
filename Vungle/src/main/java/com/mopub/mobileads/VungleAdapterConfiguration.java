@@ -42,7 +42,10 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        return Vungle.availableBidTokens();
+        // MoPub not allowed super token bytes length larger than 1KB.
+        String bidToken = Vungle.getAvailableBidTokens(10);
+        MoPubLog.log(CUSTOM, ADAPTER_NAME, "get bidding token: " + bidToken);
+        return bidToken;
     }
 
     @NonNull
