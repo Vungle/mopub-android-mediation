@@ -371,7 +371,7 @@ public class VungleRouter {
     // might be called on pubs side with header bidding and pre init Vungle sdk
     public VungleSettings applyVungleNetworkSettings(Map<String, String> configuration) {
         if (configuration == null || configuration.isEmpty()) {
-            return null;
+            return VungleNetworkSettings.getVungleSettings();
         }
         long minSpaceInit;
         try {
