@@ -63,7 +63,7 @@ public class VungleRouter {
                 VungleAdapterConfiguration.ADAPTER_VERSION.replace('.', '_'));
     }
 
-    static VungleRouter getInstance() {
+    public static VungleRouter getInstance() {
         return sInstance;
     }
 
@@ -365,4 +365,35 @@ public class VungleRouter {
             }
         }
     };
+
+    // might be called on pubs side with header bidding and pre init Vungle sdk
+    public VungleSettings applyVungleNetworkSettings(Map<String, String> configuration) {
+        if (configuration == null || configuration.isEmpty()) {
+            return null;
+        }
+        long minSpaceInit;
+        try {
+            minSpaceInit = Long.parseLong(configuration.get("VNG_MIN_SPACE_INIT"));
+        } catch (NumberFormatException e) {
+            //51 mb
+            minSpaceInit = 51 << 20;
+        }
+
+        long minSpaceLoadAd;
+        try {
+            minSpaceLoadAd = Long.parseLong(configuration.get("VNG_MIN_SPACE_LOAD_AD"));
+        } catch (NumberFormatException e) {
+            //50 mb
+            minSpaceLoadAd = 50 << 20;
+        }
+
+        boolean isAndroidIdOpted = Boolean.parseBoolean(configuration.get("VNG_DEVICE_ID_OPT_OUT"));
+
+        //Apply settings.
+        VungleNetworkSettings.setMinSpaceForInit(minSpaceInit);
+        VungleNetworkSettings.setMinSpaceForAdLoad(minSpaceLoadAd);
+        VungleNetworkSettings.setAndroidIdOptOut(isAndroidIdOpted);
+
+        return VungleNetworkSettings.getVungleSettings();
+    }
 }
