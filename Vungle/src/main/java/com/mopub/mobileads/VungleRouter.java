@@ -252,6 +252,14 @@ public class VungleRouter {
         return Vungle.getConsentStatus();
     }
 
+    public void setCCPAStatus(@NonNull Vungle.Consent status) {
+        Vungle.updateCCPAStatus(status);
+    }
+
+    public Vungle.Consent getCCPAStatus() {
+        return Vungle.getCCPAStatus();
+    }
+
     private void clearWaitingList() {
         for (Map.Entry<String, VungleRouterListener> entry : sWaitingList.entrySet()) {
             Vungle.loadAd(entry.getKey(), loadAdCallback);
@@ -371,6 +379,13 @@ public class VungleRouter {
         if (configuration == null || configuration.isEmpty()) {
             return VungleNetworkSettings.getVungleSettings();
         }
+        try {
+            boolean optedIn = Boolean.parseBoolean(configuration.get("VNG_CCPA_CONSENT_STATUS"));
+            setCCPAStatus(optedIn ? Vungle.Consent.OPTED_IN : Vungle.Consent.OPTED_OUT);
+        } catch (Exception e) {
+            //let sdk handle default CCPA consent status.
+        }
+
         long minSpaceInit;
         try {
             minSpaceInit = Long.parseLong(configuration.get("VNG_MIN_SPACE_INIT"));
