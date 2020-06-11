@@ -1,4 +1,9 @@
 ## Changelog
+  *  6.7.0.0
+    * This version of the adapter is compatible with Vungle 6.7.0 build.
+    * Support Header Bidding Participation.
+    * Ad playback callback event changes.
+
   *  6.5.3.0
     * This version of the adapters has been certified with Vungle 6.5.3 and MoPub SDK 5.11.1.
     * Code format following [MoPub mediation coding style guideline](https://developers.mopub.com/networks/integrate/mopub-network-mediation-guidelines/).
