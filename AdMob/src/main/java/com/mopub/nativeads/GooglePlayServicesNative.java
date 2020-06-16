@@ -13,6 +13,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
 
@@ -40,12 +41,6 @@ import static com.mopub.mobileads.GooglePlayServicesAdapterConfiguration.forward
  * The {@link GooglePlayServicesNative} class is used to load native Google mobile ads.
  */
 public class GooglePlayServicesNative extends CustomEventNative {
-
-    /**
-     * Key to obtain AdMob application ID from the server extras provided by MoPub.
-     */
-    public static final String KEY_EXTRA_APPLICATION_ID = "appid";
-
     /**
      * Key to obtain AdMob ad unit ID from the extras provided by MoPub.
      */
@@ -115,13 +110,13 @@ public class GooglePlayServicesNative extends CustomEventNative {
                                 @NonNull Map<String, Object> localExtras,
                                 @NonNull Map<String, String> serverExtras) {
 
+        Preconditions.checkNotNull(context);
+        Preconditions.checkNotNull(customEventNativeListener);
+        Preconditions.checkNotNull(localExtras);
+        Preconditions.checkNotNull(context);
+
         if (!sIsInitialized.getAndSet(true)) {
-            if (serverExtras.containsKey(KEY_EXTRA_APPLICATION_ID)
-                    && !TextUtils.isEmpty(serverExtras.get(KEY_EXTRA_APPLICATION_ID))) {
-                MobileAds.initialize(context, serverExtras.get(KEY_EXTRA_APPLICATION_ID));
-            } else {
-                MobileAds.initialize(context);
-            }
+            MobileAds.initialize(context);
         }
 
         mAdUnitId = serverExtras.get(KEY_EXTRA_AD_UNIT_ID);
@@ -353,8 +348,6 @@ public class GooglePlayServicesNative extends CustomEventNative {
 
             // MoPub allows for only one image, so only request for one image.
             optionsBuilder.setRequestMultipleImages(false);
-
-            optionsBuilder.setReturnUrlsForImageAssets(false);
 
             // Get the preferred image orientation from the local extras.
             if (localExtras.containsKey(KEY_EXTRA_ORIENTATION_PREFERENCE)

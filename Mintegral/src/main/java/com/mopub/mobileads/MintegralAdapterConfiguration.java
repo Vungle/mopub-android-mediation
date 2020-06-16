@@ -3,6 +3,8 @@ package com.mopub.mobileads;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,7 @@ public class MintegralAdapterConfiguration extends BaseAdapterConfiguration {
 
     public static final String APP_ID_KEY = "appId";
     public static final String APP_KEY = "appKey";
+    public static final String PLACEMENT_ID_KEY = "placementId";
     public static final String UNIT_ID_KEY = "unitId";
 
     private static final String ADAPTER_VERSION = BuildConfig.VERSION_NAME;
@@ -106,7 +109,7 @@ public class MintegralAdapterConfiguration extends BaseAdapterConfiguration {
         }
     }
 
-    public static void configureMintegral(String appId, String appKey, Context context) {
+    public static void configureMintegral(String appId, String appKey, final Context context) {
 
         if (sdkInitialized) return;
 
@@ -120,9 +123,19 @@ public class MintegralAdapterConfiguration extends BaseAdapterConfiguration {
             final Map<String, String> mtgConfigurationMap = sdk.getMTGConfigurationMap(appId, appKey);
 
             if (context instanceof Activity) {
-                sdk.init(mtgConfigurationMap, ((Activity) context).getApplication());
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        sdk.init(mtgConfigurationMap, ((Activity) context).getApplication());
+                    }
+                });
             } else if (context instanceof Application) {
-                sdk.init(mtgConfigurationMap, context);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        sdk.init(mtgConfigurationMap, context);
+                    }
+                });
             }
 
             sdkInitialized = true;
