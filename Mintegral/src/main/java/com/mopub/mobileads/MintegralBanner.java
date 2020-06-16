@@ -35,7 +35,6 @@ public class MintegralBanner extends CustomEventBanner implements BannerAdListen
     private MTGBannerView mBannerAd;
 
     private static String mAdUnitId;
-    private static String mPlacementId;
     private int mAdWidth, mAdHeight;
 
     @Override
@@ -64,8 +63,7 @@ public class MintegralBanner extends CustomEventBanner implements BannerAdListen
 
         mBannerAd = new MTGBannerView(context);
         mBannerAd.setVisibility(View.GONE);
-        mBannerAd.init(new BannerSize(BannerSize.DEV_SET_TYPE, mAdWidth, mAdHeight), mPlacementId,
-                mAdUnitId);
+        mBannerAd.init(new BannerSize(BannerSize.DEV_SET_TYPE, mAdWidth, mAdHeight), mAdUnitId);
         mBannerAd.setBannerAdListener(this);
 
         mBannerAd.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -136,8 +134,6 @@ public class MintegralBanner extends CustomEventBanner implements BannerAdListen
 
         if (serverExtras != null && !serverExtras.isEmpty()) {
             mAdUnitId = serverExtras.get(MintegralAdapterConfiguration.UNIT_ID_KEY);
-            mPlacementId = serverExtras.get(MintegralAdapterConfiguration.PLACEMENT_ID_KEY);
-
             final String appId = serverExtras.get(MintegralAdapterConfiguration.APP_ID_KEY);
             final String appKey = serverExtras.get(MintegralAdapterConfiguration.APP_KEY);
 

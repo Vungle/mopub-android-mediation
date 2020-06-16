@@ -41,6 +41,12 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_SUCCESS;
 import static com.mopub.mobileads.GooglePlayServicesAdapterConfiguration.forwardNpaIfSet;
 
 public class GooglePlayServicesRewardedVideo extends CustomEventRewardedVideo {
+
+    /**
+     * Key to obtain AdMob application ID from the server extras provided by MoPub.
+     */
+    public static final String KEY_EXTRA_APPLICATION_ID = "appid";
+
     /**
      * Key to obtain AdMob ad unit ID from the extras provided by MoPub.
      */
@@ -135,7 +141,11 @@ public class GooglePlayServicesRewardedVideo extends CustomEventRewardedVideo {
                                             @NonNull Map<String, String> serverExtras)
             throws Exception {
         if (!sIsInitialized.getAndSet(true)) {
-            MobileAds.initialize(launcherActivity);
+            if (TextUtils.isEmpty(serverExtras.get(KEY_EXTRA_APPLICATION_ID))) {
+                MobileAds.initialize(launcherActivity);
+            } else {
+                MobileAds.initialize(launcherActivity, serverExtras.get(KEY_EXTRA_APPLICATION_ID));
+            }
 
             mAdUnitId = serverExtras.get(KEY_EXTRA_AD_UNIT_ID);
             if (TextUtils.isEmpty(mAdUnitId)) {
