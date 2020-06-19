@@ -36,6 +36,8 @@ subprojects {
         maven { url 'https://maven.ogury.co' }
         maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea"}
         maven { url 'https://artifactory.verizonmedia.com/artifactory/maven'}
+        maven { url 'https://tapjoy.bintray.com/maven' }
+        maven { url  "https://chartboostmobile.bintray.com/Chartboost" }
     }
 
     if (project.name == 'Testing')
