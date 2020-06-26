@@ -19,6 +19,7 @@ import com.vungle.warren.Vungle;
 import com.vungle.warren.VungleApiClient;
 import com.vungle.warren.VungleNativeAd;
 import com.vungle.warren.VungleSettings;
+import com.vungle.warren.error.VungleException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class VungleRouter {
             }
 
             @Override
-            public void onError(Throwable throwable) {
+            public void onError(VungleException throwable) {
                 MoPubLog.log(CUSTOM_WITH_THROWABLE, "Initialization failed.", throwable);
 
                 sInitState = SDKInitState.NOTINITIALIZED;
@@ -234,6 +235,26 @@ public class VungleRouter {
         }
 
         @Override
+        public void onAdEnd(String s) {
+            //TODO implement/check if any edits needed
+        }
+
+        @Override
+        public void onAdClick(String s) {
+            //TODO check if any edits needed
+        }
+
+        @Override
+        public void onAdRewarded(String s) {
+            //TODO check if any edits needed
+        }
+
+        @Override
+        public void onAdLeftApplication(String s) {
+            //TODO check if any edits needed
+        }
+
+        @Override
         public void onAdStart(String id) {
             MoPubLog.log(CUSTOM, ADAPTER_NAME, "onAdStart - Placement ID: " + id);
 
@@ -247,7 +268,7 @@ public class VungleRouter {
         }
 
         @Override
-        public void onError(String id, Throwable error) {
+        public void onError(String id, VungleException error) {
             MoPubLog.log(CUSTOM_WITH_THROWABLE, "onUnableToPlayAd - Placement ID: " + id, error);
 
             VungleRouterListener targetListener = sVungleRouterListeners.get(id);
@@ -267,7 +288,7 @@ public class VungleRouter {
         }
 
         @Override
-        public void onError(String id, Throwable cause) {
+        public void onError(String id, VungleException cause) {
             onAdAvailabilityUpdate(id, false);
         }
 

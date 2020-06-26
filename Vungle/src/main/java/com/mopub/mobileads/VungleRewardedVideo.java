@@ -229,7 +229,6 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
         adConfig.setMuted(!mediationSettings.isSoundEnabled);
         adConfig.setFlexViewCloseTime(mediationSettings.flexViewCloseTimeInSec);
         adConfig.setOrdinal(mediationSettings.ordinalViewCount);
-        adConfig.setAutoRotate(mediationSettings.autoRotateEnabled);
     }
 
     /*

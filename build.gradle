@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:3.5.1'
         classpath 'com.novoda:bintray-release:0.9.1'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -19,7 +19,7 @@ buildscript {
 // (Any parts that depend on values set in the subproject's build.gradle go in shared-build.gradle
 // instead.)
 
-subprojects {
+subprojects { if(project.name == 'vungle-android-sdk'|| project.name == 'publisher-sdk-android') {return}
     project.group = 'com.mopub.mobileads'
 
     repositories {
