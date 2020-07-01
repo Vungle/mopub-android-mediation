@@ -1,4 +1,30 @@
 ## Changelog
+  * 12.4.2.1
+    * Refactor non-native adapter classes to use the new consolidated API from MoPub.
+    * This and newer adapter versions are only compatible with 5.13.0+ MoPub SDK.
+
+  * 12.4.2.0
+    * This version of the adapters has been certified with Tapjoy 12.4.2.
+
+  * 12.4.1.0
+    * This version of the adapters has been certified with Tapjoy 12.4.1.
+
+  * 12.4.0.1
+    * Log the Tapjoy placement ID in ad lifecycle events.
+
+  * 12.4.0.0
+    * This version of the adapters has been certified with Tapjoy 12.4.0.
+
+  * 12.3.4.0
+    * This version of the adapters has been certified with Tapjoy 12.3.4.
+
+  * 12.3.3.1
+    * Prioritize reading data from `localExtras` and fall back to `MediationSettings` if necessary for `TapjoyRewardedVideo.java`.
+    * Removed `sdkKey` setter from code. It must be entered on the Mopub dashboard.
+    
+  * 12.3.3.0
+    * This version of adapters has been certified with Tapjoy 12.3.3.
+
   * 12.3.1.2
     * Add support for AndroidX. This is the minimum version compatible with MoPub 5.9.0.
 

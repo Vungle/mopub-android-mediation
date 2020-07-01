@@ -1,4 +1,46 @@
 ## Changelog
+ * 6.17.0.0
+    * This version of the adapters has been certified with ironSource 6.17.0 and MoPub SDK 5.13.0.
+
+ * 6.16.1.1
+    * Refactor non-native adapter classes to use the new consolidated API from MoPub.
+    * This and newer adapter versions are only compatible with 5.13.0+ MoPub SDK.
+
+ * 6.16.1.0
+    * This version of the adapters has been certified with ironSource 6.16.1 and MoPub SDK 5.12.0.
+
+ * 6.16.0.0
+    * This version of the adapters has been certified with ironSource 6.16.0 and MoPub SDK 5.12.0.
+    * Support for Android Archive (AAR) version of the ironSource SDK.
+
+ * 6.15.0.1.0
+    * This version of the adapters has been certified with ironSource 6.15.0.1 and MoPub SDK 5.11.1.
+
+ * 6.14.0.1.0
+    * This version of the adapters has been certified with ironSource 6.14.0.1.
+
+ * 6.14.0.0
+    * This version of the adapters has been certified with ironSource 6.14.0.
+
+ * 6.13.0.1.0
+    * This version of the adapters has been certified with ironSource 6.13.0.1.
+    * Log the ironSource instance id in ad lifecycle events, and improve error console logs.
+
+ * 6.13.0.0
+    * This version of the adapters has been certified with ironSource 6.13.0.
+
+ * 6.11.0.0
+    * This version of the adapters has been certified with ironSource 6.11.0.
+
+ * 6.10.2.0
+    * This version of the adapters has been certified with ironSource 6.10.2.
+
+ * 6.10.1.0
+    * This version of the adapters has been certified with ironSource 6.10.1.
+
+ * 6.10.0.0
+    * This version of the adapters has been certified with ironSource 6.10.0.
+
  * 6.9.1.1
     * Add support for AndroidX. This is the minimum version compatible with MoPub 5.9.0.
 
