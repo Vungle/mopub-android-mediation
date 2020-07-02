@@ -37,10 +37,3 @@ includeBuild(mopubSdkDir) {
         substitute module('com.mopub:mopub-sdk') with project(':mopub-sdk')
     }
 }
-//AUTO: For Vungle SDK dependency configure
-def dependOnVungleSdkProject = hasProperty("SdkSrcDependency") ? "$SdkSrcDependency".toBoolean() : false
-gradle.ext.dependOnVungleSdkProject = dependOnVungleSdkProject
-if (file('../vungle-android-sdk').exists() && dependOnVungleSdkProject) {
-    includeFlat 'vungle-android-sdk'
-    include ':vungle-android-sdk:publisher-sdk-android'
-}
