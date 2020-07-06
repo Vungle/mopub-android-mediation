@@ -120,9 +120,51 @@ public class VungleMediationConfiguration implements MediationSettings {
         }
     }
 
+    static void adConfigWithLocalExtras(AdConfig adConfig, Map<String, Object> localExtras) {
+
+        if (localExtras != null && !localExtras.isEmpty()) {
+
+            if (localExtras.containsKey(Builder.EXTRA_START_MUTED_KEY)) {
+                final Object isStartMuted = localExtras.get(Builder.EXTRA_START_MUTED_KEY);
+
+                if (isStartMuted instanceof Boolean) {
+                    adConfig.setMuted((Boolean) isStartMuted);
+                }
+            } else {
+                final Object isSoundEnabled = localExtras.get(Builder.EXTRA_SOUND_ENABLED_KEY);
+                if (isSoundEnabled instanceof Boolean) {
+                    adConfig.setMuted(!(Boolean) isSoundEnabled);
+                }
+            }
+
+            final Object flexViewCloseTimeInSec = localExtras.get(Builder.EXTRA_FLEXVIEW_CLOSE_TIME_KEY);
+
+            if (flexViewCloseTimeInSec instanceof Integer) {
+                adConfig.setFlexViewCloseTime((Integer) flexViewCloseTimeInSec);
+            }
+            final Object ordinalViewCount = localExtras.get(Builder.EXTRA_ORDINAL_VIEW_COUNT_KEY);
+
+            if (ordinalViewCount instanceof Integer) {
+                adConfig.setOrdinal((Integer) ordinalViewCount);
+            }
+
+            final Object adOrientation = localExtras.get(Builder.EXTRA_ORIENTATION_KEY);
+
+            if (adOrientation instanceof Integer) {
+                adConfig.setAdOrientation((Integer) adOrientation);
+            }
+        }
+    }
+
+
     static boolean isStartMutedNotConfigured(@NonNull final Map<String, String> extras) {
         return !extras.containsKey(Builder.EXTRA_START_MUTED_KEY) &&
                 !extras.containsKey(Builder.EXTRA_SOUND_ENABLED_KEY);
+    }
+
+    static boolean isStartMutedNotConfiguredLocal(Map<String, Object> localExtras) {
+        return !localExtras.containsKey(Builder.EXTRA_START_MUTED_KEY) &&
+                !localExtras.containsKey(Builder.EXTRA_SOUND_ENABLED_KEY);
     }
 
     public static class Builder {

@@ -1,6 +1,5 @@
 package com.mopub.mobileads;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
@@ -11,9 +10,8 @@ import android.widget.RelativeLayout;
 
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.mopub.common.LifecycleListener;
+import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.common.util.Views;
 import com.vungle.warren.AdConfig;
@@ -24,12 +22,13 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.mopub.common.DataKeys.ADUNIT_FORMAT;
+import static com.mopub.common.DataKeys.AD_HEIGHT;
+import static com.mopub.common.DataKeys.AD_WIDTH;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_ATTEMPTED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_FAILED;
 import static com.vungle.warren.AdConfig.AdSize.BANNER;
 import static com.vungle.warren.AdConfig.AdSize.BANNER_LEADERBOARD;
 import static com.vungle.warren.AdConfig.AdSize.BANNER_SHORT;
@@ -37,7 +36,7 @@ import static com.vungle.warren.AdConfig.AdSize.VUNGLE_MREC;
 import static java.lang.Math.ceil;
 
 @Keep
-public class VungleBanner extends BaseAd {
+public class VungleBanner extends CustomEventBanner {
 
     private static final String ADAPTER_NAME = VungleBanner.class.getSimpleName();
     /*
@@ -49,6 +48,7 @@ public class VungleBanner extends BaseAd {
 
     private static VungleRouter sVungleRouter;
     private final Handler mHandler;
+    private CustomEventBannerListener mCustomEventBannerListener;
     private String mAppId;
     private String mPlacementId;
     private VungleBannerRouterListener mVungleRouterListener;
@@ -60,7 +60,6 @@ public class VungleBanner extends BaseAd {
     private VungleAdapterConfiguration mVungleAdapterConfiguration;
     private AtomicBoolean mPendingRequestBanner = new AtomicBoolean(false);
     private AdConfig mAdConfig = new AdConfig();
-    @Nullable private View mAdView;
 
     public VungleBanner() {
         mHandler = new Handler(Looper.getMainLooper());
@@ -69,22 +68,34 @@ public class VungleBanner extends BaseAd {
     }
 
     @Override
-    protected void load(@NonNull final Context context, @NonNull final AdData adData) {
+    protected void loadBanner(Context context, CustomEventBannerListener customEventBannerListener,
+                              Map<String, Object> localExtras, Map<String, String> serverExtras) {
         this.mContext = context;
+        mCustomEventBannerListener = customEventBannerListener;
         mPendingRequestBanner.set(true);
         setAutomaticImpressionAndClickTracking(false);
 
-        final Map<String, String> extras = adData.getExtras();
-        if (!validateIdsInServerExtras(extras)) {
+        if (context == null) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     MoPubLog.log(LOAD_FAILED, ADAPTER_NAME,
                             MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
                             MoPubErrorCode.NETWORK_NO_FILL);
-                    if (mLoadListener != null) {
-                        mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                    }
+                    mCustomEventBannerListener.onBannerFailed(MoPubErrorCode.NETWORK_NO_FILL);
+                }
+            });
+            return;
+        }
+
+        if (!validateIdsInServerExtras(serverExtras)) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    MoPubLog.log(LOAD_FAILED, ADAPTER_NAME,
+                            MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
+                            MoPubErrorCode.NETWORK_NO_FILL);
+                    mCustomEventBannerListener.onBannerFailed(MoPubErrorCode.NETWORK_NO_FILL);
                 }
             });
 
@@ -98,10 +109,10 @@ public class VungleBanner extends BaseAd {
         if (!sVungleRouter.isVungleInitialized()) {
             // No longer passing the placement IDs (pids) param per Vungle 6.3.17
             sVungleRouter.initVungle(context, mAppId);
-            mVungleAdapterConfiguration.setCachedInitializationParameters(context, extras);
+            mVungleAdapterConfiguration.setCachedInitializationParameters(context, serverExtras);
         }
 
-        AdSize vungleAdSize = getVungleAdSize(adData);
+        AdSize vungleAdSize = getVungleAdSize(localExtras, serverExtras);
         if (vungleAdSize == null) {
             mHandler.post(new Runnable() {
                 @Override
@@ -109,9 +120,7 @@ public class VungleBanner extends BaseAd {
                     MoPubLog.log(LOAD_FAILED, ADAPTER_NAME,
                             MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
                             "Banner size is not valid.");
-                    if (mLoadListener != null) {
-                        mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                    }
+                    mCustomEventBannerListener.onBannerFailed(MoPubErrorCode.NETWORK_NO_FILL);
                 }
             });
 
@@ -121,8 +130,8 @@ public class VungleBanner extends BaseAd {
         mAdConfig.setAdSize(vungleAdSize);
         sVungleRouter.addRouterListener(mPlacementId, mVungleRouterListener);
 
-        VungleMediationConfiguration.adConfigWithExtras(mAdConfig, extras);
-        if (VungleMediationConfiguration.isStartMutedNotConfigured(extras)) {
+        VungleMediationConfiguration.adConfigWithLocalExtras(mAdConfig, localExtras);
+        if (VungleMediationConfiguration.isStartMutedNotConfiguredLocal(localExtras)) {
             mAdConfig.setMuted(true); // start muted by default
         }
 
@@ -148,22 +157,31 @@ public class VungleBanner extends BaseAd {
                 public void run() {
                     MoPubLog.log(LOAD_FAILED, ADAPTER_NAME, "Unsupported Banner/Medium rectangle Ad size:  " +
                             "Placement ID:" + mPlacementId);
-                    if (mLoadListener != null) {
-                        mLoadListener.onAdLoadFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
-                    }
+                    mCustomEventBannerListener.onBannerFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
                 }
             });
         }
     }
 
-    private AdConfig.AdSize getVungleAdSize(@NonNull final AdData adData) {
-        final Map<String, String> extras =  adData.getExtras();
+    private AdConfig.AdSize getVungleAdSize(Map<String, Object> localExtras, Map<String, String> serverExtras) {
+        Preconditions.checkNotNull(localExtras);
+        Preconditions.checkNotNull(serverExtras);
 
         AdConfig.AdSize adSizeType = null;
-        int adWidthInDp = adData.getAdWidth() != null ? adData.getAdWidth() : 0;
-        int adHeightInDp = adData.getAdHeight() != null ? adData.getAdHeight() : 0;
+        int adWidthInDp = 0;
+        int adHeightInDp = 0;
 
-        String adUnitFormat = extras.get(ADUNIT_FORMAT);
+        final Object adWidthObject = localExtras.get(AD_WIDTH);
+        if (adWidthObject instanceof Integer) {
+            adWidthInDp = (int) adWidthObject;
+        }
+
+        final Object adHeightObject = localExtras.get(AD_HEIGHT);
+        if (adHeightObject instanceof Integer) {
+            adHeightInDp = (int) adHeightObject;
+        }
+
+        String adUnitFormat = serverExtras.get(ADUNIT_FORMAT);
         if (!TextUtils.isEmpty(adUnitFormat)) {
             adUnitFormat = adUnitFormat.toLowerCase();
         }
@@ -215,12 +233,6 @@ public class VungleBanner extends BaseAd {
         mVungleRouterListener = null;
     }
 
-    @Nullable
-    @Override
-    protected LifecycleListener getLifecycleListener() {
-        return null;
-    }
-
     private boolean validateIdsInServerExtras(Map<String, String> serverExtras) {
         boolean isAllDataValid = true;
 
@@ -257,60 +269,50 @@ public class VungleBanner extends BaseAd {
         return isAllDataValid;
     }
 
-    @NonNull
-    public String getAdNetworkId() {
-        return mPlacementId != null ? mPlacementId : "";
-    }
-
-    @Override
-    protected boolean checkAndInitializeSdk(@NonNull final Activity activity,
-                                            @NonNull final AdData adData) {
-        return false;
-    }
-
-    @Nullable
-    public View getAdView() {
-        return mAdView;
+    private String getAdNetworkId() {
+        return mPlacementId;
     }
 
     private class VungleBannerRouterListener implements VungleRouterListener {
 
         @Override
-        public void onAdEnd(String placementId) {
-            if (mPlacementId.equals(placementId)) {
-                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd placement id: " + placementId);
+        public void onAdEnd(@NonNull String placementReferenceId) {
+            MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd placement id" + placementReferenceId);
+            if (mPlacementId.equals(placementReferenceId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " +
+                        placementReferenceId);
                 mIsPlaying = false;
                 sVungleRouter.removeRouterListener(mPlacementId);
                 mVungleRouterListener = null;
-            }
-        }
-
-        @Override
-        public void onAdClick(String placementId) {
-            if (mPlacementId.equals(placementId)) {
-                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdClick placement id: " + placementId);
                 mHandler.post(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (mInteractionListener != null) {
-                            mInteractionListener.onAdClicked();
+                        if (mCustomEventBannerListener != null) {
+                            mCustomEventBannerListener.onBannerClicked();
+                            MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
                         }
-                        MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
                     }
                 });
             }
         }
 
         @Override
+        public void onAdClick(String placementId) {
+            //TODO implement
+            //TODO check if any edits needed
+        }
+
+        @Override
         public void onAdRewarded(String placementId) {
-            //nothing to do
+            //TODO implement
+            //TODO check if any edits needed
         }
 
         @Override
         public void onAdLeftApplication(String placementId) {
-            //Nothing to do. If we invoke mCustomEventBannerListener.onLeaveApplication() it will cause
-            // onBannerClicked() event to be called twice.
+            //TODO implement
+            //TODO check if any edits needed
         }
 
         @Override
@@ -325,8 +327,8 @@ public class VungleBanner extends BaseAd {
 
                     @Override
                     public void run() {
-                        if (mInteractionListener != null) {
-                            mInteractionListener.onAdImpression();
+                        if (mCustomEventBannerListener != null) {
+                            mCustomEventBannerListener.onBannerImpression();
                         }
                     }
                 });
@@ -349,17 +351,10 @@ public class VungleBanner extends BaseAd {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (mInteractionListener == null && mLoadListener != null) {
-                            mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                            MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
-                                    MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
-                                    MoPubErrorCode.NETWORK_NO_FILL);
-                        } else if (mInteractionListener != null) {
-                            mInteractionListener.onAdFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                            MoPubLog.log(getAdNetworkId(), SHOW_FAILED, ADAPTER_NAME,
-                                    MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
-                                    MoPubErrorCode.NETWORK_NO_FILL);
-                        }
+                        mCustomEventBannerListener.onBannerFailed(MoPubErrorCode.NETWORK_NO_FILL);
+                        MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
+                                MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
+                                MoPubErrorCode.NETWORK_NO_FILL);
                     }
                 });
             }
@@ -397,7 +392,7 @@ public class VungleBanner extends BaseAd {
                                 //TODO: Remove once it's fixed in MoPub Unity plugin.
                                 layout.setBackgroundColor(Color.TRANSPARENT);
                                 boolean loadSucceeded = false;
-								
+
                                 if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
                                     mVungleBannerAd = sVungleRouter.getVungleBannerAd(placementReferenceId,
                                             mAdConfig.getAdSize());
@@ -433,19 +428,15 @@ public class VungleBanner extends BaseAd {
                                 }
 
                                 if (loadSucceeded) {
-                                    mAdView = layout;
-                                    if (mLoadListener != null) {
-                                        mLoadListener.onAdLoaded();
+                                    if (mCustomEventBannerListener != null) {
+                                        mCustomEventBannerListener.onBannerLoaded(layout);
+                                        MoPubLog.log(LOAD_SUCCESS, ADAPTER_NAME);
                                     }
-                                    MoPubLog.log(LOAD_SUCCESS, ADAPTER_NAME);
-
                                 } else {
                                     mHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (mLoadListener != null) {
-                                                mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                                            }
+                                            mCustomEventBannerListener.onBannerFailed(MoPubErrorCode.NETWORK_NO_FILL);
                                             MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
                                                     MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
                                                     MoPubErrorCode.NETWORK_NO_FILL);
@@ -460,9 +451,7 @@ public class VungleBanner extends BaseAd {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (mLoadListener != null) {
-                                    mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                                }
+                                mCustomEventBannerListener.onBannerFailed(MoPubErrorCode.NETWORK_NO_FILL);
                                 MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
                                         MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
                                         MoPubErrorCode.NETWORK_NO_FILL);
