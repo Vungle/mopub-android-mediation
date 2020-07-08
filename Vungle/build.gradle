@@ -3,9 +3,6 @@ project.ext.networkName = 'vungle'
 
 apply from: '../shared-build.gradle'
 
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
 def sdkSrcDependency = hasProperty("SdkSrcDependency") ? "$SdkSrcDependency".toBoolean() : false
 
 dependencies {
@@ -18,24 +15,9 @@ dependencies {
 
         implementation fileTree(dir: 'libs', include: ['*.aar'])
     }
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
 /*
-    implementation 'com.android.support:support-annotations:28.0.0'
-*/
-}
-
-android {
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        freeCompilerArgs = ['-Xjvm-default=enable']
-        jvmTarget = '1.8'
-    }
-}
-
 repositories {
     mavenCentral()
 }
+*/
