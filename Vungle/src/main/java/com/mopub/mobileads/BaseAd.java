@@ -29,8 +29,8 @@ public abstract class BaseAd {
 
     private boolean mAutomaticImpressionAndClickTracking = true;
 
-    protected AdLifecycleListenerJava.LoadListener mLoadListener;
-    protected AdLifecycleListenerJava.InteractionListener mInteractionListener;
+    protected AdLifecycleListener.LoadListener mLoadListener;
+    protected AdLifecycleListener.InteractionListener mInteractionListener;
 
     /*
      * Called when a BaseAd is being invalidated or destroyed. Perform any final cleanup here.
@@ -87,7 +87,7 @@ public abstract class BaseAd {
      */
     @VisibleForTesting
     final void internalLoad(@NonNull final Context context,
-                            @NonNull final AdLifecycleListenerJava.LoadListener loadListener,
+                            @NonNull final AdLifecycleListener.LoadListener loadListener,
                             @NonNull final AdData adData) throws Exception {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(loadListener);
@@ -144,7 +144,7 @@ public abstract class BaseAd {
      *
      * @param interactionListener the listener to notify of interaction events.
      */
-    final void internalShow(@NonNull final AdLifecycleListenerJava.InteractionListener interactionListener) {
+    final void internalShow(@NonNull final AdLifecycleListener.InteractionListener interactionListener) {
         Preconditions.checkNotNull(interactionListener);
         mInteractionListener = interactionListener;
         show();

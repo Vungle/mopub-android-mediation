@@ -21,7 +21,7 @@ import com.vungle.warren.VungleNativeAd;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.mopub.common.DataKeys.ADUNIT_FORMAT;
+import static com.mopub.network.ImpressionData.ADUNIT_FORMAT;
 import static com.mopub.common.DataKeys.AD_HEIGHT;
 import static com.mopub.common.DataKeys.AD_WIDTH;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
@@ -185,11 +185,8 @@ public class VungleBanner extends CustomEventBanner {
         if (!TextUtils.isEmpty(adUnitFormat)) {
             adUnitFormat = adUnitFormat.toLowerCase();
         }
-        final boolean isMRECFormat = "medium_rectangle".equals(adUnitFormat);
-        if (isMRECFormat) {
-            if (adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight()) {
-                adSizeType = VUNGLE_MREC;
-            }
+        if (adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight()) {
+            adSizeType = VUNGLE_MREC;
         } else {
             if (adWidthInDp >= BANNER_LEADERBOARD.getWidth() && adHeightInDp >= BANNER_LEADERBOARD.getHeight()) {
                 adSizeType = BANNER_LEADERBOARD;
