@@ -42,7 +42,8 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        return null;
+        final String bidToken = Vungle.getAvailableBidTokens(10);
+        return bidToken;
     }
 
     @NonNull
