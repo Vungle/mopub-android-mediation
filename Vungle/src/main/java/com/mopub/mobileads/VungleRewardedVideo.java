@@ -249,17 +249,6 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
                 MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdEnd - Placement ID: " +
                         placementReferenceId);
                 mIsPlaying = false;
-
-                MoPubLog.log(getAdNetworkId(), SHOULD_REWARD, ADAPTER_NAME, MoPubReward.NO_REWARD_AMOUNT,
-                        MoPubReward.NO_REWARD_LABEL);
-                // Vungle does not provide a callback when a user should be rewarded.
-                // You will need to provide your own reward logic if you receive a reward with
-                // "NO_REWARD_LABEL" && "NO_REWARD_AMOUNT"
-                MoPubRewardedVideoManager.onRewardedVideoCompleted(VungleRewardedVideo.class,
-                        mPlacementId,
-                        MoPubReward.success(MoPubReward.NO_REWARD_LABEL,
-                                MoPubReward.NO_REWARD_AMOUNT));
-
                 MoPubRewardedVideoManager.onRewardedVideoClosed(VungleRewardedVideo.class,
                         mPlacementId);
 
@@ -277,10 +266,17 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
 
         @Override
         public void onAdRewarded(String placementId) {
-            MoPubRewardedVideoManager.onRewardedVideoClicked(VungleRewardedVideo.class,
-                    mPlacementId);
-
-            MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), SHOULD_REWARD, ADAPTER_NAME, MoPubReward.NO_REWARD_AMOUNT,
+                        MoPubReward.NO_REWARD_LABEL);
+                // Vungle does not provide a callback when a user should be rewarded.
+                // You will need to provide your own reward logic if you receive a reward with
+                // "NO_REWARD_LABEL" && "NO_REWARD_AMOUNT"
+                MoPubRewardedVideoManager.onRewardedVideoCompleted(VungleRewardedVideo.class,
+                        mPlacementId,
+                        MoPubReward.success(MoPubReward.NO_REWARD_LABEL,
+                                MoPubReward.NO_REWARD_AMOUNT));
+            }
         }
 
         @Override

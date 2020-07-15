@@ -131,7 +131,7 @@ public class VungleBanner extends CustomEventBanner {
         sVungleRouter.addRouterListener(mPlacementId, mVungleRouterListener);
 
         VungleMediationConfiguration.adConfigWithLocalExtras(mAdConfig, localExtras);
-        if (VungleMediationConfiguration.isStartMutedNotConfiguredLocal(localExtras)) {
+        if (VungleMediationConfiguration.isStartMutedNotConfigured(localExtras)) {
             mAdConfig.setMuted(true); // start muted by default
         }
 
@@ -281,35 +281,35 @@ public class VungleBanner extends CustomEventBanner {
                 mIsPlaying = false;
                 sVungleRouter.removeRouterListener(mPlacementId);
                 mVungleRouterListener = null;
+            }
+        }
+
+        @Override
+        public void onAdClick(String placementId) {
+            if (mPlacementId.equals(placementId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdClick placement id: " + placementId);
                 mHandler.post(new Runnable() {
 
                     @Override
                     public void run() {
                         if (mCustomEventBannerListener != null) {
                             mCustomEventBannerListener.onBannerClicked();
-                            MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
                         }
+                        MoPubLog.log(getAdNetworkId(), CLICKED, ADAPTER_NAME);
                     }
                 });
             }
         }
 
         @Override
-        public void onAdClick(String placementId) {
-            //TODO implement
-            //TODO check if any edits needed
-        }
-
-        @Override
         public void onAdRewarded(String placementId) {
-            //TODO implement
-            //TODO check if any edits needed
+            //nothing to do
         }
 
         @Override
         public void onAdLeftApplication(String placementId) {
-            //TODO implement
-            //TODO check if any edits needed
+            //Nothing to do. If we invoke mCustomEventBannerListener.onLeaveApplication() it will cause
+            // onBannerClicked() event to be called twice.
         }
 
         @Override
