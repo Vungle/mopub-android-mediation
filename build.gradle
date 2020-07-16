@@ -60,7 +60,7 @@ subprojects {
     }
 
     dependencies {
-        implementation ('com.mopub:mopub-sdk') {
+        implementation ('com.mopub:mopub-sdk:5.8.0@aar') {
             transitive = true
 
             // Do not include viewability code -- pub must opt in explicitly in their own .gradle file

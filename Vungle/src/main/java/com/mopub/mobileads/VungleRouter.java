@@ -3,7 +3,7 @@ package com.mopub.mobileads;
 import android.app.Activity;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 import com.mopub.common.BaseLifecycleListener;
 import com.mopub.common.LifecycleListener;
