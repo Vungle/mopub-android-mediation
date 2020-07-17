@@ -410,6 +410,12 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
                 return this;
             }
 
+            @Deprecated
+            public Builder withAutoRotate(boolean autoRotateEnabled) {
+                return withAutoRotate(autoRotateEnabled
+                        ? AdConfig.AUTO_ROTATE : AdConfig.MATCH_VIDEO);
+            }
+
             @Override
             public VungleMediationSettings build() {
                 return new VungleMediationSettings(this);
