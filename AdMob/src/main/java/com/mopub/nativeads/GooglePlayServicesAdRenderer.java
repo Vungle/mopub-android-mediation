@@ -71,7 +71,7 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
     /**
      * A view binder containing the layout resource and views to be rendered by the renderer.
      */
-    private final GooglePlayServicesViewBinder mViewBinder;
+    private final MediaViewBinder mViewBinder;
 
     /**
      * A weak hash map used to keep track of view holder so that the views can be properly recycled.
@@ -83,7 +83,7 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
      */
     private static final String ADAPTER_NAME = GooglePlayServicesAdRenderer.class.getSimpleName();
 
-    public GooglePlayServicesAdRenderer(GooglePlayServicesViewBinder viewBinder) {
+    public GooglePlayServicesAdRenderer(MediaViewBinder viewBinder) {
         this.mViewBinder = viewBinder;
         this.mViewHolderMap = new WeakHashMap<>();
     }
@@ -260,7 +260,7 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
 
         @NonNull
         public static GoogleStaticNativeViewHolder fromViewBinder(@NonNull View view,
-                                                                  @NonNull GooglePlayServicesViewBinder
+                                                                  @NonNull MediaViewBinder
                                                                           viewBinder) {
             final GoogleStaticNativeViewHolder viewHolder = new GoogleStaticNativeViewHolder();
             viewHolder.mMainView = view;

@@ -43,8 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/ad_unit_hint"
-            android:inputType="text" />
+            android:hint="@string/ad_unit_hint" />
 
     </LinearLayout>
 
@@ -65,8 +64,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/ad_unit_name_hint"
-            android:inputType="text" />
+            android:hint="@string/ad_unit_name_hint" />
     </LinearLayout>
 
     <LinearLayout
@@ -86,8 +84,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/ad_unit_keywords_hint"
-            android:inputType="text" />
+            android:hint="@string/ad_unit_keywords_hint"/>
     </LinearLayout>
 
 </LinearLayout>

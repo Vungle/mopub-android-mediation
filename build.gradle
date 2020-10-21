@@ -42,11 +42,11 @@ subprojects {
 
     android {
         // Keep these SDK versions (compile, min, target) in sync with mopub-sdk/shared-build.gradle
-        compileSdkVersion 30
+        compileSdkVersion 28
 
         defaultConfig {
             minSdkVersion 19
-            targetSdkVersion 30
+            targetSdkVersion 28
         }
 
         buildTypes {

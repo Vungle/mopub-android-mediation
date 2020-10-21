@@ -281,16 +281,8 @@ public class VungleInterstitial extends BaseAd {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (mInteractionListener == null && mLoadListener != null) {
-                            mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                            MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
-                                    MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
-                                    MoPubErrorCode.NETWORK_NO_FILL);
-                        } else if (mInteractionListener != null) {
+                        if (mInteractionListener != null) {
                             mInteractionListener.onAdFailed(MoPubErrorCode.NETWORK_NO_FILL);
-                            MoPubLog.log(getAdNetworkId(), SHOW_FAILED, ADAPTER_NAME,
-                                    MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
-                                    MoPubErrorCode.NETWORK_NO_FILL);
                         }
 
                         MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
