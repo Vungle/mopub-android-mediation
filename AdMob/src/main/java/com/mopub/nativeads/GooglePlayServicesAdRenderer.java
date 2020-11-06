@@ -71,7 +71,7 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
     /**
      * A view binder containing the layout resource and views to be rendered by the renderer.
      */
-    private final MediaViewBinder mViewBinder;
+    private final GooglePlayServicesViewBinder mViewBinder;
 
     /**
      * A weak hash map used to keep track of view holder so that the views can be properly recycled.
@@ -83,7 +83,7 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
      */
     private static final String ADAPTER_NAME = GooglePlayServicesAdRenderer.class.getSimpleName();
 
-    public GooglePlayServicesAdRenderer(MediaViewBinder viewBinder) {
+    public GooglePlayServicesAdRenderer(GooglePlayServicesViewBinder viewBinder) {
         this.mViewBinder = viewBinder;
         this.mViewHolderMap = new WeakHashMap<>();
     }
@@ -253,14 +253,14 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
         @Nullable
         FrameLayout mAdChoicesIconContainer;
         @Nullable
-        MediaLayout mMediaView;
+        GooglePlayServicesMediaLayout mMediaView;
 
         private static final GoogleStaticNativeViewHolder EMPTY_VIEW_HOLDER =
                 new GoogleStaticNativeViewHolder();
 
         @NonNull
         public static GoogleStaticNativeViewHolder fromViewBinder(@NonNull View view,
-                                                                  @NonNull MediaViewBinder
+                                                                  @NonNull GooglePlayServicesViewBinder
                                                                           viewBinder) {
             final GoogleStaticNativeViewHolder viewHolder = new GoogleStaticNativeViewHolder();
             viewHolder.mMainView = view;
@@ -275,7 +275,7 @@ public class GooglePlayServicesAdRenderer implements MoPubAdRenderer<GooglePlayS
                 viewHolder.mPrivacyInformationIconImageView =
                         (ImageView) view.findViewById(viewBinder.privacyInformationIconImageId);
                 viewHolder.mMediaView =
-                        (MediaLayout) view.findViewById(viewBinder.mediaLayoutId);
+                        (GooglePlayServicesMediaLayout) view.findViewById(viewBinder.mediaLayoutId);
                 Map<String, Integer> extraViews = viewBinder.extras;
                 Integer starRatingTextViewId = extraViews.get(VIEW_BINDER_KEY_STAR_RATING);
                 if (starRatingTextViewId != null) {

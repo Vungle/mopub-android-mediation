@@ -6,13 +6,13 @@ include ':AdColony',
         ':AppLovin',
         ':Chartboost',
         ':FacebookAudienceNetwork',
-        ':Flurry',
         ':IronSource',
         ':Pangle',
         ':Tapjoy',
         ':UnityAds',
         ':Verizon',
-        ':Vungle'
+        ':Vungle',
+        ':SnapAudienceNetwork'
 
 // Test App
 if (file('Testing').exists()) {
