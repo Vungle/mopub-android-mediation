@@ -1,4 +1,8 @@
 ## Changelog
+  * 6.8.1.0
+    * This version of the adapters has been certified with Vungle 6.8.1 and MoPub SDK 5.14.0.
+    * Added support for Android 11.
+
   * 6.8.0.0
     * This version of the adapters has been certified with Vungle 6.8.0 and MoPub SDK 5.13.0.
     * Remove FlexFeed and FlexView on adapter side since Vungle SDK not support it from 6.8.0.
