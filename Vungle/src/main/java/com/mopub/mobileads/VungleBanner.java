@@ -326,7 +326,7 @@ public class VungleBanner extends BaseAd {
                     @Override
                     public void run() {
                         if (mInteractionListener != null) {
-                            mInteractionListener.onAdImpression();
+                            mInteractionListener.onAdShown();
                         }
                     }
                 });
@@ -337,6 +337,24 @@ public class VungleBanner extends BaseAd {
                 } else if (VUNGLE_MREC == mAdConfig.getAdSize()) {
                     sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRouterListener);
                 }
+            }
+        }
+
+
+        @Override
+        public void onAdViewed(@NonNull String placementReferenceId) {
+            if (mPlacementId.equals(placementReferenceId)) {
+
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdViewed - Placement ID: " + placementReferenceId);
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mInteractionListener != null) {
+                            mInteractionListener.onAdImpression();
+                        }
+                    }
+                });
             }
         }
 
