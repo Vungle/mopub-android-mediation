@@ -14,6 +14,8 @@ import com.mopub.mobileads.vungle.BuildConfig;
 import com.vungle.warren.Vungle;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
@@ -29,6 +31,9 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
 
     private static VungleRouter sVungleRouter;
 
+    private AtomicReference<String> tokenReference = new AtomicReference<>(null);
+    private AtomicBoolean isComputingToken = new AtomicBoolean(false);
+
     public VungleAdapterConfiguration() {
         sVungleRouter = VungleRouter.getInstance();
     }
@@ -42,8 +47,8 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        final String bidToken = Vungle.getAvailableBidTokens(10);
-        return bidToken;
+        refreshBidderToken(context);
+        return tokenReference.get();
     }
 
     @NonNull
@@ -70,6 +75,7 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
 
         synchronized (VungleAdapterConfiguration.class) {
             try {
+                tokenReference.set(Vungle.getAvailableBidTokens(context, 10));
                 if (Vungle.isInitialized()) {
                     networkInitializationSucceeded = true;
 
@@ -99,6 +105,21 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
         } else {
             listener.onNetworkInitializationFinished(this.getClass(),
                     MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
+        }
+    }
+
+    private void refreshBidderToken(final Context context) {
+        if (isComputingToken.compareAndSet(false, true)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final String token = Vungle.getAvailableBidTokens(context, 10);
+                    if (token != null) {
+                        tokenReference.set(token);
+                    }
+                    isComputingToken.set(false);
+                }
+            }).start();
         }
     }
 }
