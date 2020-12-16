@@ -33,6 +33,7 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
 
     private AtomicReference<String> tokenReference = new AtomicReference<>(null);
     private AtomicBoolean isComputingToken = new AtomicBoolean(false);
+    private AtomicBoolean initBidToken  =  new AtomicBoolean(false);
 
     public VungleAdapterConfiguration() {
         sVungleRouter = VungleRouter.getInstance();
@@ -47,7 +48,12 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        refreshBidderToken(context);
+        if (initBidToken.compareAndSet(false, true)) {
+            String token = Vungle.getAvailableBidTokens(10);
+            tokenReference.set(token);
+        } else {
+            refreshBidderToken(context);
+        }
         return tokenReference.get();
     }
 
@@ -75,7 +81,6 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
 
         synchronized (VungleAdapterConfiguration.class) {
             try {
-                tokenReference.set(Vungle.getAvailableBidTokens(context, 10));
                 if (Vungle.isInitialized()) {
                     networkInitializationSucceeded = true;
 
@@ -113,7 +118,7 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final String token = Vungle.getAvailableBidTokens(context, 10);
+                    final String token = Vungle.getAvailableBidTokens(10);
                     if (token != null) {
                         tokenReference.set(token);
                     }
