@@ -14,6 +14,8 @@ import com.mopub.mobileads.vungle.BuildConfig;
 import com.vungle.warren.Vungle;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
@@ -29,6 +31,8 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
 
     private static VungleRouter sVungleRouter;
 
+    private AtomicReference<String> tokenReference = new AtomicReference<>(null);
+
     public VungleAdapterConfiguration() {
         sVungleRouter = VungleRouter.getInstance();
     }
@@ -42,8 +46,12 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        final String bidToken = Vungle.getAvailableBidTokens(10);
-        return bidToken;
+        String token = Vungle.getAvailableBidTokens(context, 10);
+        if (token != null) {
+            tokenReference.set(token);
+        }
+        MoPubLog.log(CUSTOM, ADAPTER_NAME, "Vungle's getBiddingToken: " + tokenReference.get());
+        return tokenReference.get();
     }
 
     @NonNull
@@ -101,4 +109,5 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
                     MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
         }
     }
+
 }
