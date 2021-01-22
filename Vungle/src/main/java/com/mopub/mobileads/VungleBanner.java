@@ -145,7 +145,7 @@ public class VungleBanner extends BaseAd {
                 mVungleRouterListener.onAdAvailabilityUpdate(mPlacementId, true);
                 MoPubLog.log(mPlacementId, LOAD_SUCCESS, ADAPTER_NAME);
             } else {
-                sVungleRouter.loadAdForPlacement(mPlacementId, mAdConfig, adMarkup, mVungleRouterListener);
+                sVungleRouter.loadAdForPlacement(mPlacementId, new AdConfig(), adMarkup, mVungleRouterListener);
                 MoPubLog.log(mPlacementId, LOAD_ATTEMPTED, ADAPTER_NAME);
             }
         } else {
@@ -326,11 +326,11 @@ public class VungleBanner extends BaseAd {
             if (mPlacementId.equals(placementReferenceId)) {
                 mIsPlaying = true;
                 //Let's load it again to mimic auto-cache
-//TODO                if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
-//                    sVungleRouter.loadBannerAd(mPlacementId, mAdConfig.getAdSize(), mVungleRouterListener);
-//                } else if (VUNGLE_MREC == mAdConfig.getAdSize()) {
-//                    sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRouterListener);
-//                }
+                if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
+                    sVungleRouter.loadBannerAd(mPlacementId, null, mAdConfig.getAdSize(), mVungleRouterListener);
+                } else if (VUNGLE_MREC == mAdConfig.getAdSize()) {
+                    sVungleRouter.loadAdForPlacement(mPlacementId, new AdConfig(), null, mVungleRouterListener);
+                }
             }
         }
 

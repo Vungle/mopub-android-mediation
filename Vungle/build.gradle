@@ -3,7 +3,7 @@ project.ext.networkName = 'vungle'
 
 apply from: '../shared-build.gradle'
 
-def sdkSrcDependency = hasProperty("SdkSrcDependency") ? "$SdkSrcDependency".toBoolean() : false
+def sdkSrcDependency = gradle.ext.has('dependOnVungleSdkProject') && gradle.ext.dependOnVungleSdkProject
 
 dependencies {
     if (sdkSrcDependency) {
