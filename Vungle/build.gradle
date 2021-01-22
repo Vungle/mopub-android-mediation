@@ -3,12 +3,6 @@ project.ext.networkName = 'vungle'
 
 apply from: '../shared-build.gradle'
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 def sdkSrcDependency = hasProperty("SdkSrcDependency") ? "$SdkSrcDependency".toBoolean() : false
 
 dependencies {
