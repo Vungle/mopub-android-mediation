@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mopub.common.BaseLifecycleListener;
 import com.mopub.common.LifecycleListener;
@@ -148,7 +149,7 @@ public class VungleRouter {
         return Vungle.isInitialized();
     }
 
-    void loadAdForPlacement(String placementId, VungleRouterListener routerListener) {
+    void loadAdForPlacement(String placementId, @Nullable AdConfig adConfig, @Nullable String adMarkup, VungleRouterListener routerListener) {
         switch (sInitState) {
             case NOTINITIALIZED:
                 MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "loadAdForPlacement is called before " +
@@ -160,7 +161,7 @@ public class VungleRouter {
             case INITIALIZED:
                 if (isValidPlacement(placementId)) {
                     addRouterListener(placementId, routerListener);
-                    Vungle.loadAd(placementId, loadAdCallback);
+                    Vungle.loadAd(placementId, adMarkup, adConfig, loadAdCallback);
                 } else {
                     routerListener.onUnableToPlayAd(placementId, "Invalid/Inactive Placement Id");
                 }
@@ -168,7 +169,7 @@ public class VungleRouter {
         }
     }
 
-    void loadBannerAd(@NonNull String placementId, @NonNull AdSize adSize,
+    void loadBannerAd(@NonNull String placementId, @Nullable String adMarkup, @NonNull AdSize adSize,
                       @NonNull VungleRouterListener routerListener) {
         switch (sInitState) {
             case NOTINITIALIZED:
@@ -183,7 +184,7 @@ public class VungleRouter {
             case INITIALIZED:
                 if (isValidPlacement(placementId)) {
                     addRouterListener(placementId, routerListener);
-                    Banners.loadBanner(placementId, adSize, loadAdCallback);
+                    Banners.loadBanner(placementId, adMarkup, adSize, loadAdCallback);
                 } else {
                     routerListener.onUnableToPlayAd(placementId, "Invalid/Inactive Banner Placement Id");
                     MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to play ad due to invalid/inactive Banner placement Id");

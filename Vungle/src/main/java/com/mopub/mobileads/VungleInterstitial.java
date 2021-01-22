@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mopub.common.DataKeys;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.logging.MoPubLog;
 import com.vungle.warren.AdConfig;
@@ -106,7 +108,12 @@ public class VungleInterstitial extends BaseAd {
         mAdConfig = new AdConfig();
         VungleMediationConfiguration.adConfigWithExtras(mAdConfig, extras);
 
-        sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRouterListener);
+        String adMarkup = extras.get(DataKeys.ADM_KEY);
+        if (TextUtils.isEmpty(adMarkup)) {
+            adMarkup = null;
+        }
+
+        sVungleRouter.loadAdForPlacement(mPlacementId, mAdConfig, adMarkup, mVungleRouterListener);
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);
     }
 

@@ -8,6 +8,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mopub.common.DataKeys;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPubReward;
 import com.mopub.common.logging.MoPubLog;
@@ -106,7 +107,8 @@ public class VungleRewardedVideo extends BaseAd {
 
         setAutomaticImpressionAndClickTracking(false);
 
-        if (!validateIdsInExtras(adData.getExtras())) {
+        final Map<String, String> extras = adData.getExtras();
+        if (!validateIdsInExtras(extras)) {
             if (mLoadListener != null) {
                 mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
             }
@@ -119,9 +121,14 @@ public class VungleRewardedVideo extends BaseAd {
 
         mCustomerId = adData.getCustomerId();
 
+        String adMarkup = extras.get(DataKeys.ADM_KEY);
+        if (TextUtils.isEmpty(adMarkup)) {
+            adMarkup = null;
+        }
+
         if (sVungleRouter.isVungleInitialized()) {
             if (sVungleRouter.isValidPlacement(mPlacementId)) {
-                sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRewardedRouterListener);
+                sVungleRouter.loadAdForPlacement(mPlacementId, new AdConfig(), adMarkup, mVungleRewardedRouterListener);
             } else {
                 MoPubLog.log(getAdNetworkId(), CUSTOM, "Invalid or Inactive Placement ID: " + mPlacementId);
                 MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "Invalid or Inactive Placement ID: " +
