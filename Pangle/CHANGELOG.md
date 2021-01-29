@@ -1,4 +1,10 @@
 ## Changelog
+  * 3.4.1.1.1
+     * Pass `AdCallSource` data for Pangle SDK to collect ad source information.
+
+  * 3.4.1.1.0
+     * This version of the adapters has been certified with Pangle 3.4.1.1 and MoPub SDK 5.15.0.
+
   * 3.4.0.0.0
      * This version of the adapters has been certified with Pangle 3.4.0.0 and MoPub SDK 5.15.0.
 
