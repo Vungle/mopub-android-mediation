@@ -149,7 +149,7 @@ public class VungleRouter {
         return Vungle.isInitialized();
     }
 
-    void loadAdForPlacement(String placementId, @Nullable AdConfig adConfig, @Nullable String adMarkup, VungleRouterListener routerListener) {
+    void loadAdForPlacement(String placementId, @Nullable String adMarkup, @Nullable AdConfig adConfig, VungleRouterListener routerListener) {
         switch (sInitState) {
             case NOTINITIALIZED:
                 MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "loadAdForPlacement is called before " +
@@ -208,20 +208,20 @@ public class VungleRouter {
         sVungleRouterListeners.remove(placementId);
     }
 
-    boolean isAdPlayableForPlacement(String placementId) {
-        return Vungle.canPlayAd(placementId);
+    boolean isAdPlayableForPlacement(String placementId, @Nullable String adMarkup) {
+        return Vungle.canPlayAd(placementId, adMarkup);
     }
 
-    boolean isBannerAdPlayable(@NonNull String placementId, @NonNull AdSize adSize) {
+    boolean isBannerAdPlayable(@NonNull String placementId, @Nullable String adMarkup, @NonNull AdSize adSize) {
         Preconditions.checkNotNull(placementId);
         Preconditions.checkNotNull(adSize);
 
-        return Banners.canPlayAd(placementId, adSize);
+        return Banners.canPlayAd(placementId, adMarkup, adSize);
     }
 
-    void playAdForPlacement(String placementId, AdConfig adConfig) {
-        if (isAdPlayableForPlacement(placementId)) {
-            Vungle.playAd(placementId, adConfig, playAdCallback);
+    void playAdForPlacement(String placementId, @Nullable String adMarkup, AdConfig adConfig) {
+        if (isAdPlayableForPlacement(placementId, adMarkup)) {
+            Vungle.playAd(placementId, adMarkup, adConfig, playAdCallback);
         } else {
             MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "There should not be this case. " +
                     "playAdForPlacement is called before an ad is loaded for Placement ID: " + placementId);
@@ -235,15 +235,15 @@ public class VungleRouter {
         }
     }
 
-    VungleNativeAd getVungleMrecAd(String placementId, AdConfig adConfig) {
-        return Vungle.getNativeAd(placementId, adConfig, playAdCallback);
+    VungleNativeAd getVungleMrecAd(String placementId, @Nullable String adMarkup,  AdConfig adConfig) {
+        return Vungle.getNativeAd(placementId, adMarkup, adConfig, playAdCallback);
     }
 
-    VungleBanner getVungleBannerAd(@NonNull String placementId, @NonNull AdSize adSize) {
+    VungleBanner getVungleBannerAd(@NonNull String placementId, @Nullable String adMarkup, @NonNull AdSize adSize) {
         Preconditions.checkNotNull(placementId);
         Preconditions.checkNotNull(adSize);
 
-        return Banners.getBanner(placementId, adSize, playAdCallback);
+        return Banners.getBanner(placementId, adMarkup, adSize, playAdCallback);
     }
 
     /**
