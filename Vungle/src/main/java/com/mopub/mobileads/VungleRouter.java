@@ -333,6 +333,11 @@ public class VungleRouter {
         }
 
         @Override
+        public void creativeId(String creativeId) {
+            // no-op
+        }
+
+        @Override
         public void onAdStart(String id) {
             MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "onAdStart - Placement ID: " + id);
 
@@ -381,6 +386,7 @@ public class VungleRouter {
 
         @Override
         public void onError(String id, VungleException cause) {
+            MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "loadAd error: " + cause);
             onAdAvailabilityUpdate(id, false);
         }
 
