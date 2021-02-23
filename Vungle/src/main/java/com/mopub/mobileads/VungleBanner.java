@@ -169,11 +169,7 @@ public class VungleBanner extends BaseAd {
         }
         final boolean isMRECFormat = "medium_rectangle".equals(adUnitFormat);
         if (isMRECFormat) {
-            if ((adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight())
-            || (adWidthInDp >= BANNER_LEADERBOARD.getWidth() && adHeightInDp >= BANNER_LEADERBOARD.getHeight())
-            || (adWidthInDp >= BANNER.getWidth() && adHeightInDp >= BANNER.getHeight())
-            || (adWidthInDp >= BANNER_SHORT.getWidth() && adHeightInDp >= BANNER_SHORT.getHeight())
-            ) {
+            if ((adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight())) {
                 adSizeType = VUNGLE_MREC;
             }
         } else {
