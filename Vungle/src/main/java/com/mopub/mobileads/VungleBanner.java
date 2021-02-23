@@ -55,7 +55,6 @@ public class VungleBanner extends BaseAd {
     private VungleBannerRouterListener mVungleRouterListener;
     private boolean mIsPlaying;
     private com.vungle.warren.VungleBanner mVungleBannerAd;
-    private VungleNativeAd mVungleMrecAd;
     private Context mContext;
     @NonNull
     private VungleAdapterConfiguration mVungleAdapterConfiguration;
@@ -170,7 +169,11 @@ public class VungleBanner extends BaseAd {
         }
         final boolean isMRECFormat = "medium_rectangle".equals(adUnitFormat);
         if (isMRECFormat) {
-            if (adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight()) {
+            if ((adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight())
+            || (adWidthInDp >= BANNER_LEADERBOARD.getWidth() && adHeightInDp >= BANNER_LEADERBOARD.getHeight())
+            || (adWidthInDp >= BANNER.getWidth() && adHeightInDp >= BANNER.getHeight())
+            || (adWidthInDp >= BANNER_SHORT.getWidth() && adHeightInDp >= BANNER_SHORT.getHeight())
+            ) {
                 adSizeType = VUNGLE_MREC;
             }
         } else {
@@ -203,10 +206,6 @@ public class VungleBanner extends BaseAd {
             Views.removeFromParent(mVungleBannerAd);
             mVungleBannerAd.destroyAd();
             mVungleBannerAd = null;
-        } else if (mVungleMrecAd != null) {
-            Views.removeFromParent(mVungleMrecAd.renderNativeView());
-            mVungleMrecAd.finishDisplayingAd();
-            mVungleMrecAd = null;
         }
 
         if (sVungleRouter != null) {
@@ -394,8 +393,6 @@ public class VungleBanner extends BaseAd {
                                         super.onVisibilityChanged(changedView, visibility);
                                         if (mVungleBannerAd != null) {
                                             mVungleBannerAd.setAdVisibility(visibility == VISIBLE);
-                                        } else if (mVungleMrecAd != null) {
-                                            mVungleMrecAd.setAdVisibility(visibility == VISIBLE);
                                         }
                                     }
                                 };
@@ -412,33 +409,7 @@ public class VungleBanner extends BaseAd {
                                         loadSucceeded = true;
                                         layout.addView(mVungleBannerAd);
                                     }
-                                } else if (VUNGLE_MREC == mAdConfig.getAdSize()) {
-                                    mVungleMrecAd = sVungleRouter.getVungleMrecAd(placementReferenceId, mAdConfig);
-                                    if (mVungleMrecAd != null) {
-                                        View adView = mVungleMrecAd.renderNativeView();
-                                        if (adView != null) {
-                                            loadSucceeded = true;
-                                            float density = 0;
-
-                                            if (mContext.getResources() != null) {
-                                                if (mContext.getResources().getDisplayMetrics() != null) {
-                                                    density = mContext.getResources().getDisplayMetrics().density;
-                                                }
-                                            }
-                                            int width = (int) ceil(VUNGLE_MREC.getWidth() * density);
-                                            int height = (int) ceil(VUNGLE_MREC.getHeight() * density);
-
-                                            RelativeLayout mrecViewWrapper = new RelativeLayout(mContext);
-                                            mrecViewWrapper.addView(adView);
-                                            RelativeLayout.LayoutParams params =
-                                                    new RelativeLayout.LayoutParams(width, height);
-                                            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-
-                                            layout.addView(mrecViewWrapper, params);
-                                        }
-                                    }
                                 }
-
                                 if (loadSucceeded) {
                                     mAdView = layout;
                                     if (mLoadListener != null) {

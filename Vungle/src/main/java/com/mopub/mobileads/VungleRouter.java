@@ -234,10 +234,6 @@ public class VungleRouter {
         }
     }
 
-    VungleNativeAd getVungleMrecAd(String placementId, AdConfig adConfig) {
-        return Vungle.getNativeAd(placementId, adConfig, playAdCallback);
-    }
-
     VungleBanner getVungleBannerAd(@NonNull String placementId, @NonNull AdSize adSize) {
         Preconditions.checkNotNull(placementId);
         Preconditions.checkNotNull(adSize);
