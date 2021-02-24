@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mopub.common.BaseLifecycleListener;
 import com.mopub.common.LifecycleListener;
@@ -22,7 +23,6 @@ import com.vungle.warren.Plugin;
 import com.vungle.warren.Vungle;
 import com.vungle.warren.VungleApiClient;
 import com.vungle.warren.VungleBanner;
-import com.vungle.warren.VungleNativeAd;
 import com.vungle.warren.VungleSettings;
 import com.vungle.warren.error.VungleException;
 
@@ -50,7 +50,37 @@ public class VungleRouter {
     private static VungleRouter sInstance = new VungleRouter();
     private static SDKInitState sInitState = SDKInitState.NOTINITIALIZED;
     private static Map<String, VungleRouterListener> sVungleRouterListeners = new HashMap<>();
-    private static Map<String, VungleRouterListener> sWaitingList = new HashMap<>();
+    private static Map<AdRequest, VungleRouterListener> sWaitingList = new HashMap<>();
+
+    private class AdRequest {
+        @NonNull
+        private String placementId;
+        @Nullable
+        private String adMarkup;
+
+        public AdRequest(@NonNull String placementId, @Nullable String adMarkup) {
+            this.placementId = placementId;
+            this.adMarkup = adMarkup;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = placementId.hashCode();
+            result = 31 * result + (adMarkup != null ? adMarkup.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+
+            AdRequest request = (AdRequest) obj;
+
+            if (!placementId.equals(request.placementId)) return false;
+            return adMarkup != null ? adMarkup.equals(request.adMarkup) : request.adMarkup == null;
+        }
+    }
 
     private enum SDKInitState {
         NOTINITIALIZED,
@@ -148,19 +178,20 @@ public class VungleRouter {
         return Vungle.isInitialized();
     }
 
-    void loadAdForPlacement(String placementId, VungleRouterListener routerListener) {
+    void loadAdForPlacement(String placementId, @Nullable String adMarkup, @Nullable AdConfig adConfig, VungleRouterListener routerListener) {
         switch (sInitState) {
             case NOTINITIALIZED:
                 MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "loadAdForPlacement is called before " +
                         "initialization starts. This is not an expect case.");
                 break;
             case INITIALIZING:
-                sWaitingList.put(placementId, routerListener);
+                AdRequest adRequest = new AdRequest(placementId, adMarkup);
+                sWaitingList.put(adRequest, routerListener);
                 break;
             case INITIALIZED:
                 if (isValidPlacement(placementId)) {
                     addRouterListener(placementId, routerListener);
-                    Vungle.loadAd(placementId, loadAdCallback);
+                    Vungle.loadAd(placementId, adMarkup, adConfig, loadAdCallback);
                 } else {
                     routerListener.onUnableToPlayAd(placementId, "Invalid/Inactive Placement Id");
                 }
@@ -168,7 +199,7 @@ public class VungleRouter {
         }
     }
 
-    void loadBannerAd(@NonNull String placementId, @NonNull AdSize adSize,
+    void loadBannerAd(@NonNull String placementId, @Nullable String adMarkup, @NonNull AdSize adSize,
                       @NonNull VungleRouterListener routerListener) {
         switch (sInitState) {
             case NOTINITIALIZED:
@@ -177,13 +208,14 @@ public class VungleRouter {
                 break;
 
             case INITIALIZING:
-                sWaitingList.put(placementId, routerListener);
+                AdRequest adRequest = new AdRequest(placementId, adMarkup);
+                sWaitingList.put(adRequest, routerListener);
                 break;
 
             case INITIALIZED:
                 if (isValidPlacement(placementId)) {
                     addRouterListener(placementId, routerListener);
-                    Banners.loadBanner(placementId, adSize, loadAdCallback);
+                    Banners.loadBanner(placementId, adMarkup, adSize, loadAdCallback);
                 } else {
                     routerListener.onUnableToPlayAd(placementId, "Invalid/Inactive Banner Placement Id");
                     MoPubLog.log(CUSTOM, ADAPTER_NAME, "Unable to play ad due to invalid/inactive Banner placement Id");
@@ -207,20 +239,20 @@ public class VungleRouter {
         sVungleRouterListeners.remove(placementId);
     }
 
-    boolean isAdPlayableForPlacement(String placementId) {
-        return Vungle.canPlayAd(placementId);
+    boolean isAdPlayableForPlacement(String placementId, @Nullable String adMarkup) {
+        return Vungle.canPlayAd(placementId, adMarkup);
     }
 
-    boolean isBannerAdPlayable(@NonNull String placementId, @NonNull AdSize adSize) {
+    boolean isBannerAdPlayable(@NonNull String placementId, @Nullable String adMarkup, @NonNull AdSize adSize) {
         Preconditions.checkNotNull(placementId);
         Preconditions.checkNotNull(adSize);
 
-        return Banners.canPlayAd(placementId, adSize);
+        return Banners.canPlayAd(placementId, adMarkup, adSize);
     }
 
-    void playAdForPlacement(String placementId, AdConfig adConfig) {
-        if (isAdPlayableForPlacement(placementId)) {
-            Vungle.playAd(placementId, adConfig, playAdCallback);
+    void playAdForPlacement(String placementId, @Nullable String adMarkup, AdConfig adConfig) {
+        if (isAdPlayableForPlacement(placementId, adMarkup)) {
+            Vungle.playAd(placementId, adMarkup, adConfig, playAdCallback);
         } else {
             MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "There should not be this case. " +
                     "playAdForPlacement is called before an ad is loaded for Placement ID: " + placementId);
@@ -234,11 +266,11 @@ public class VungleRouter {
         }
     }
 
-    VungleBanner getVungleBannerAd(@NonNull String placementId, @NonNull AdSize adSize) {
+    VungleBanner getVungleBannerAd(@NonNull String placementId, @Nullable String adMarkup, @NonNull AdSize adSize) {
         Preconditions.checkNotNull(placementId);
         Preconditions.checkNotNull(adSize);
 
-        return Banners.getBanner(placementId, adSize, playAdCallback);
+        return Banners.getBanner(placementId, adMarkup, adSize, playAdCallback);
     }
 
     /**
@@ -263,9 +295,10 @@ public class VungleRouter {
     }
 
     private void clearWaitingList() {
-        for (Map.Entry<String, VungleRouterListener> entry : sWaitingList.entrySet()) {
-            Vungle.loadAd(entry.getKey(), loadAdCallback);
-            sVungleRouterListeners.put(entry.getKey(), entry.getValue());
+        for (Map.Entry<AdRequest, VungleRouterListener> entry : sWaitingList.entrySet()) {
+            AdRequest request = entry.getKey();
+            Vungle.loadAd(request.placementId, request.adMarkup, null, loadAdCallback);
+            sVungleRouterListeners.put(request.placementId, entry.getValue());
         }
 
         sWaitingList.clear();
@@ -328,6 +361,11 @@ public class VungleRouter {
         }
 
         @Override
+        public void creativeId(String creativeId) {
+            // no-op
+        }
+
+        @Override
         public void onAdStart(String id) {
             MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "onAdStart - Placement ID: " + id);
 
@@ -376,6 +414,7 @@ public class VungleRouter {
 
         @Override
         public void onError(String id, VungleException cause) {
+            MoPubLog.log(id, CUSTOM, ADAPTER_NAME, "loadAd error: " + cause);
             onAdAvailabilityUpdate(id, false);
         }
 
