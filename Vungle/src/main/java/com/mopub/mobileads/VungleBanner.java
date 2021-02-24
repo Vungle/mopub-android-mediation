@@ -134,14 +134,6 @@ public class VungleBanner extends BaseAd {
                 sVungleRouter.loadBannerAd(mPlacementId, vungleAdSize, mVungleRouterListener);
                 MoPubLog.log(mPlacementId, LOAD_ATTEMPTED, ADAPTER_NAME);
             }
-        } else if (VUNGLE_MREC == vungleAdSize) {
-            if (sVungleRouter.isAdPlayableForPlacement(mPlacementId)) {
-                mVungleRouterListener.onAdAvailabilityUpdate(mPlacementId, true);
-                MoPubLog.log(mPlacementId, LOAD_SUCCESS, ADAPTER_NAME);
-            } else {
-                sVungleRouter.loadAdForPlacement(mPlacementId, mVungleRouterListener);
-                MoPubLog.log(mPlacementId, LOAD_ATTEMPTED, ADAPTER_NAME);
-            }
         } else {
             mHandler.post(new Runnable() {
                 @Override
@@ -169,7 +161,7 @@ public class VungleBanner extends BaseAd {
         }
         final boolean isMRECFormat = "medium_rectangle".equals(adUnitFormat);
         if (isMRECFormat) {
-            if ((adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight())) {
+            if (adWidthInDp >= VUNGLE_MREC.getWidth() && adHeightInDp >= VUNGLE_MREC.getHeight()) {
                 adSizeType = VUNGLE_MREC;
             }
         } else {
