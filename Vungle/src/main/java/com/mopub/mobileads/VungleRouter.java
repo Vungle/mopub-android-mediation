@@ -254,13 +254,15 @@ public class VungleRouter {
         if (isAdPlayableForPlacement(placementId, adMarkup)) {
             Vungle.playAd(placementId, adMarkup, adConfig, playAdCallback);
         } else {
-            MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "There should not be this case. " +
-                    "playAdForPlacement is called before an ad is loaded for Placement ID: " + placementId);
+            //ad got busted
+            MoPubLog.log(placementId, CUSTOM, ADAPTER_NAME, "Ad to be played was busted. " +
+                    "playAdForPlacement() is called before an ad is reloaded for Placement ID: "
+                    + placementId);
 
             if (sVungleRouterListeners.containsKey(placementId)) {
                 VungleRouterListener routerListener = sVungleRouterListeners.get(placementId);
                 if (routerListener != null) {
-                    routerListener.onUnableToPlayAd(placementId, "Invalid/Inactive Placement Id");
+                    routerListener.onUnableToPlayAd(placementId, "Ad for Placement was busted");
                 }
             }
         }
