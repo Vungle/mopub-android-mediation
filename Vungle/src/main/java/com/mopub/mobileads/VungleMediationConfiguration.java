@@ -116,9 +116,9 @@ public class VungleMediationConfiguration implements MediationSettings {
 
     public static class Builder {
         private static final String EXTRA_START_MUTED_KEY = "startMuted";
-        private static final String EXTRA_SOUND_ENABLED_KEY = VungleInterstitial.SOUND_ENABLED_KEY;
-        private static final String EXTRA_ORDINAL_VIEW_COUNT_KEY = VungleInterstitial.ORDINAL_VIEW_COUNT_KEY;
-        private static final String EXTRA_ORIENTATION_KEY = VungleInterstitial.AD_ORIENTATION_KEY;
+        private static final String EXTRA_SOUND_ENABLED_KEY = "vungleSoundEnabled";
+        private static final String EXTRA_ORDINAL_VIEW_COUNT_KEY = "vungleOrdinalViewCount";
+        private static final String EXTRA_ORIENTATION_KEY = "vungleAdOrientation";
 
         @Nullable
         private String mUserId;
