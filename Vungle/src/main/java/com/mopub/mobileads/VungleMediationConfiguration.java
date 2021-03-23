@@ -70,7 +70,9 @@ public class VungleMediationConfiguration implements MediationSettings {
     }
 
     static void adConfigWithExtras(@NonNull final AdConfig adConfig,
-                                   @NonNull final Map<String, String> extras) {
+                                   @NonNull final Map<String, String> extras,
+                                   boolean defaultMuteState) {
+        adConfig.setMuted(defaultMuteState);
 
         if (extras.containsKey(Builder.EXTRA_START_MUTED_KEY)) {
             final String isStartMuted = extras.get(Builder.EXTRA_START_MUTED_KEY);
@@ -107,11 +109,6 @@ public class VungleMediationConfiguration implements MediationSettings {
                 // ignore and don't set ad orientation
             }
         }
-    }
-
-    static boolean isStartMutedNotConfigured(@NonNull final Map<String, String> extras) {
-        return !extras.containsKey(Builder.EXTRA_START_MUTED_KEY) &&
-                !extras.containsKey(Builder.EXTRA_SOUND_ENABLED_KEY);
     }
 
     public static class Builder {
