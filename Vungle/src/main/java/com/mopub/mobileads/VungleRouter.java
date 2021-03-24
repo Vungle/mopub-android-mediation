@@ -461,6 +461,7 @@ public class VungleRouter {
         VungleNetworkSettings.setMinSpaceForInit(minSpaceInit);
         VungleNetworkSettings.setMinSpaceForAdLoad(minSpaceLoadAd);
         VungleNetworkSettings.setAndroidIdOptOut(isAndroidIdOpted);
+        VungleNetworkSettings.setPriorityPlacement(configuration.get("VNG_PRIORITY_PLACEMENT"));
 
         return VungleNetworkSettings.getVungleSettings();
     }

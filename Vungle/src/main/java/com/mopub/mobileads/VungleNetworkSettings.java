@@ -7,26 +7,31 @@ import com.vungle.warren.VungleSettings;
  */
 class VungleNetworkSettings {
 
+    private static VungleSettings.Builder sBuilder = new VungleSettings.Builder();
+
     /**
-     * Minimum Space in Bytes
+     * To pass Vungle network setting to SDK, these methods must be called before first loadAd.
+     * if called after first loading an ad, settings will not be applied.
      */
-    private static long sMinimumSpaceForInit = 50 << 20;
-    private static long sMinimumSpaceForAd = 51 << 20;
-    private static boolean sAndroidIdOptedOut;
     private static VungleSettings sVungleSettings;
 
     static void setMinSpaceForInit(long spaceForInit) {
-        sMinimumSpaceForInit = spaceForInit;
+        sBuilder.setMinimumSpaceForInit(spaceForInit);
         applySettings();
     }
 
     static void setMinSpaceForAdLoad(long spaceForAd) {
-        sMinimumSpaceForAd = spaceForAd;
+        sBuilder.setMinimumSpaceForAd(spaceForAd);
         applySettings();
     }
 
     static void setAndroidIdOptOut(boolean isOptedOut) {
-        sAndroidIdOptedOut = isOptedOut;
+        sBuilder.setAndroidIdOptOut(isOptedOut);
+        applySettings();
+    }
+
+    static void setPriorityPlacement(String priorityPlacement) {
+        sBuilder.setPriorityPlacement(priorityPlacement);
         applySettings();
     }
 
@@ -34,16 +39,8 @@ class VungleNetworkSettings {
         return sVungleSettings;
     }
 
-    /**
-     * To pass Vungle network setting to SDK. this method must be called before first loadAd.
-     * if called after first loading an ad, settings will not be applied.
-     */
+
     private static void applySettings() {
-        sVungleSettings = new VungleSettings.Builder()
-                .setMinimumSpaceForInit(sMinimumSpaceForInit)
-                .setMinimumSpaceForAd(sMinimumSpaceForAd)
-                .setAndroidIdOptOut(sAndroidIdOptedOut)
-                .disableBannerRefresh()
-                .build();
+        sVungleSettings = sBuilder.disableBannerRefresh().build();
     }
 }
