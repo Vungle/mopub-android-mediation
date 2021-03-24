@@ -204,20 +204,10 @@ public class VungleRewardedVideo extends BaseAd {
     }
 
     private void setUpMediationSettingsForRequest(AdConfig adConfig) {
-        VungleMediationConfiguration globalMediationSettings =
-                MoPubRewardedAdManager.getGlobalMediationSettings(VungleMediationConfiguration.class);
-        if (globalMediationSettings == null) {
-            // pubs are using older adapter version
-            globalMediationSettings = MoPubRewardedAdManager
-                    .getGlobalMediationSettings(VungleMediationConfiguration.class);
-        }
-
-        VungleMediationConfiguration instanceMediationSettings =
-                MoPubRewardedAdManager.getInstanceMediationSettings(VungleMediationConfiguration.class, mAdUnitId);
-        if (instanceMediationSettings == null) {
-            instanceMediationSettings = MoPubRewardedAdManager
-                    .getInstanceMediationSettings(VungleMediationConfiguration.class, mAdUnitId);
-        }
+        VungleMediationConfiguration globalMediationSettings = MoPubRewardedAdManager
+                .getGlobalMediationSettings(VungleMediationConfiguration.class);
+        VungleMediationConfiguration instanceMediationSettings = MoPubRewardedAdManager
+                .getInstanceMediationSettings(VungleMediationConfiguration.class, mAdUnitId);
         // Local options override global options.
         if (instanceMediationSettings != null) {
             modifyAdConfig(adConfig, instanceMediationSettings);
