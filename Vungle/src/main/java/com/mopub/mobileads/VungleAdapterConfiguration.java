@@ -52,7 +52,7 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        String token = Vungle.getAvailableBidTokens(context, 10);
+        String token = Vungle.getAvailableBidTokensBySize(context, 1024);
         if (token != null) {
             tokenReference.set(token);
         }
