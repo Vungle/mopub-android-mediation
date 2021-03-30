@@ -18,7 +18,6 @@ import com.mopub.common.LifecycleListener;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.common.util.Views;
 import com.vungle.warren.AdConfig;
-import com.vungle.warren.AdConfig.AdSize;
 import com.vungle.warren.error.VungleException;
 
 import java.util.Map;
@@ -32,10 +31,11 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_SUCCESS;
-import static com.vungle.warren.AdConfig.AdSize.BANNER;
-import static com.vungle.warren.AdConfig.AdSize.BANNER_LEADERBOARD;
-import static com.vungle.warren.AdConfig.AdSize.BANNER_SHORT;
-import static com.vungle.warren.AdConfig.AdSize.VUNGLE_MREC;
+import static com.vungle.warren.BaseAdConfig.*;
+import static com.vungle.warren.BaseAdConfig.AdSize.BANNER;
+import static com.vungle.warren.BaseAdConfig.AdSize.BANNER_LEADERBOARD;
+import static com.vungle.warren.BaseAdConfig.AdSize.BANNER_SHORT;
+import static com.vungle.warren.BaseAdConfig.AdSize.VUNGLE_MREC;
 
 @Keep
 public class VungleBanner extends BaseAd {
@@ -405,8 +405,8 @@ public class VungleBanner extends BaseAd {
                             boolean loadSucceeded = false;
 
                             if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
-                                mVungleBannerAd = sVungleRouter.getVungleBannerAd(placementId, mAdMarkup,
-                                        mAdConfig.getAdSize());
+                                mVungleBannerAd = sVungleRouter.getVungleBannerAd(placementId,
+                                        mAdMarkup, mAdConfig);
                                 if (mVungleBannerAd != null) {
                                     loadSucceeded = true;
                                     layout.addView(mVungleBannerAd);
