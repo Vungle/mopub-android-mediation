@@ -3,9 +3,6 @@ package com.mopub.mobileads;
 import android.content.Context;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
@@ -14,8 +11,10 @@ import com.mopub.mobileads.vungle.BuildConfig;
 import com.vungle.warren.Vungle;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
@@ -87,6 +86,7 @@ public class VungleAdapterConfiguration extends BaseAdapterConfiguration {
             try {
                 if (Vungle.isInitialized()) {
                     networkInitializationSucceeded = true;
+                    sVungleRouter.setsInitState(VungleRouter.SDKInitState.INITIALIZED);
 
                 } else if (configuration != null && sVungleRouter != null) {
                     sWithAutoRotate = configuration.get(WITH_AUTO_ROTATE_KEY);

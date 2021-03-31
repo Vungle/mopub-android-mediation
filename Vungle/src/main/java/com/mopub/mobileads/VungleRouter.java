@@ -3,9 +3,6 @@ package com.mopub.mobileads;
 import android.app.Activity;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.mopub.common.BaseLifecycleListener;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPub;
@@ -28,6 +25,9 @@ import com.vungle.warren.error.VungleException;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
@@ -61,6 +61,7 @@ public class VungleRouter {
         }
     };
     private static final VungleRouter sInstance = new VungleRouter();
+
     private static SDKInitState sInitState = SDKInitState.NOTINITIALIZED;
     private final static Map<String, VungleRouterListener> sVungleRouterListeners = new HashMap<>();
     private final static Map<AdRequest, VungleRouterListener> sWaitingList = new HashMap<>();
@@ -95,7 +96,7 @@ public class VungleRouter {
         }
     }
 
-    private enum SDKInitState {
+    protected enum SDKInitState {
         NOTINITIALIZED,
         INITIALIZING,
         INITIALIZED
@@ -465,5 +466,9 @@ public class VungleRouter {
             default:
                 return UNSPECIFIED;
         }
+    }
+
+    protected void setsInitState(SDKInitState sInitState) {
+        VungleRouter.sInitState = sInitState;
     }
 }
