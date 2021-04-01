@@ -18,6 +18,7 @@ import com.mopub.common.LifecycleListener;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.common.util.Views;
 import com.vungle.warren.AdConfig;
+import com.vungle.warren.BannerAdConfig;
 import com.vungle.warren.error.VungleException;
 
 import java.util.Map;
@@ -405,7 +406,7 @@ public class VungleBanner extends BaseAd {
 
                             if (AdConfig.AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
                                 mVungleBannerAd = sVungleRouter.getVungleBannerAd(placementId,
-                                        mAdMarkup, mAdConfig);
+                                        mAdMarkup, new BannerAdConfig(mAdConfig));
                                 if (mVungleBannerAd != null) {
                                     loadSucceeded = true;
                                     layout.addView(mVungleBannerAd);
