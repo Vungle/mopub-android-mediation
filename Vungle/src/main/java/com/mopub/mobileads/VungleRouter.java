@@ -14,7 +14,7 @@ import com.mopub.common.logging.MoPubLog;
 import com.mopub.common.privacy.ConsentStatus;
 import com.mopub.common.privacy.PersonalInfoManager;
 import com.vungle.warren.AdConfig;
-import com.vungle.warren.BaseAdConfig.AdSize;
+import com.vungle.warren.AdConfig.AdSize;
 import com.vungle.warren.Banners;
 import com.vungle.warren.BaseAdConfig;
 import com.vungle.warren.InitCallback;
