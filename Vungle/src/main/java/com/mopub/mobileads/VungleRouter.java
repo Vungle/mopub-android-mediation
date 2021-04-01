@@ -224,7 +224,7 @@ public class VungleRouter {
 
             case INITIALIZED:
                 addRouterListener(placementId, routerListener);
-                Banners.loadBanner(placementId, adMarkup, adSize, loadAdCallback);
+                Banners.loadBanner(placementId, adMarkup, new BaseAdConfig(adSize), loadAdCallback);
                 break;
         }
     }
