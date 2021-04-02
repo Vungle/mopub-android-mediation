@@ -18,6 +18,7 @@ import com.mopub.common.LifecycleListener;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.common.util.Views;
 import com.vungle.warren.AdConfig;
+import com.vungle.warren.AdConfig.AdSize;
 import com.vungle.warren.BannerAdConfig;
 import com.vungle.warren.error.VungleException;
 
@@ -104,7 +105,7 @@ public class VungleBanner extends BaseAd {
             mVungleAdapterConfiguration.setCachedInitializationParameters(context, extras);
         }
 
-        AdConfig.AdSize vungleAdSize = getVungleAdSize(adData);
+        AdSize vungleAdSize = getVungleAdSize(adData);
         if (vungleAdSize == null) {
             mHandler.post(new Runnable() {
                 @Override
@@ -130,7 +131,7 @@ public class VungleBanner extends BaseAd {
             mAdMarkup = null;
         }
 
-        if (AdConfig.AdSize.isBannerAdSize(vungleAdSize)) {
+        if (AdSize.isBannerAdSize(vungleAdSize)) {
             sVungleRouter.loadBannerAd(mPlacementId, mAdMarkup, vungleAdSize, mVungleRouterListener);
             MoPubLog.log(mPlacementId, LOAD_ATTEMPTED, ADAPTER_NAME);
         } else {
@@ -147,10 +148,10 @@ public class VungleBanner extends BaseAd {
         }
     }
 
-    private AdConfig.AdSize getVungleAdSize(@NonNull final AdData adData) {
+    private AdSize getVungleAdSize(@NonNull final AdData adData) {
         final Map<String, String> extras = adData.getExtras();
 
-        AdConfig.AdSize adSizeType = null;
+        AdSize adSizeType = null;
         int adWidthInDp = adData.getAdWidth() != null ? adData.getAdWidth() : 0;
         int adHeightInDp = adData.getAdHeight() != null ? adData.getAdHeight() : 0;
 
@@ -308,7 +309,7 @@ public class VungleBanner extends BaseAd {
             if (mPlacementId.equals(placementReferenceId)) {
                 mIsPlaying = true;
                 //Let's load it again to mimic auto-cache
-                if (AdConfig.AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
+                if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
                     sVungleRouter.loadBannerAd(mPlacementId, null, mAdConfig.getAdSize(), mVungleRouterListener);
                 }
             }
@@ -404,7 +405,7 @@ public class VungleBanner extends BaseAd {
                             layout.setBackgroundColor(Color.TRANSPARENT);
                             boolean loadSucceeded = false;
 
-                            if (AdConfig.AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
+                            if (AdSize.isBannerAdSize(mAdConfig.getAdSize())) {
                                 mVungleBannerAd = sVungleRouter.getVungleBannerAd(placementId,
                                         mAdMarkup, new BannerAdConfig(mAdConfig));
                                 if (mVungleBannerAd != null) {
