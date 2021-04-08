@@ -1,4 +1,43 @@
 ## Changelog
+  * 19.8.0.0
+    * This version of the adapters has been certified with AdMob 19.8.0 and MoPub 5.16.3.
+    * Align impression tracking for non-native ad formats based on Google's `onAdImpression()` callback.
+
+  * 19.7.0.1
+    * Service release. No code changes.
+
+  * 19.7.0.0
+    * This version of the adapters has been certified with AdMob 19.7.0 and MoPub 5.16.0.
+    * Refactor interstitial, rewarded video, and native based on new API guidelines from Google. No action items for publishers.
+
+  * 19.6.0.2
+    * Make `GooglePlayServicesNativeAd.java` public, and update the deprecated usage of `setMediaAspectRatio()` and `NativeAdOptions` orientations.
+
+  * 19.6.0.1
+    * Fix a bug where the rewarded video adapter fails to request a new ad after a show-related error happens.
+
+  * 19.6.0.0
+    * This version of the adapters has been certified with AdMob 19.6.0 and MoPub 5.15.0.
+    * Remove the deprecated `onAdLeftApplication()` callback. As a result, click is no longer tracked for interstitial (in addition to rewarded video).
+
+  * 19.5.0.3
+    * Fail rewarded video playback errors using `VIDEO_PLAYBACK_ERROR` so publishers can request for the next rewarded video.
+
+  * 19.5.0.2
+    * Migrate the `MediaLayout` implementation from using `com.mopub.nativeads.MediaLayout` to `com.mopub.nativeads.GooglePlayServicesMediaLayout`. Publishers must use the new `GooglePlayServicesMediaLayout` in their native ad XML.
+
+  * 19.5.0.1
+    * Prevent oversized banner ads from serving by failing the ad request if the creative's width or height is greater than the publishers-specified width or height.
+
+  * 19.5.0.0
+    * This version of the adapters has been certified with AdMob 19.5.0 and MoPub 5.14.0.
+
+  * 19.4.0.1
+    * Bind native ad resources via the dedicated `GooglePlayServicesViewBinder.java` instead of MoPub's `MediaViewBinder.java`. Publishers must use this new ViewBinder in their apps.
+
+  * 19.4.0.0
+    * This version of the adapters has been certified with AdMob 19.4.0 and MoPub 5.13.1.
+
   * 19.3.0.2
     * Fix native ad static images not displayed/clickable. This allows Google to manage the image asset within their `MediaView`.
 

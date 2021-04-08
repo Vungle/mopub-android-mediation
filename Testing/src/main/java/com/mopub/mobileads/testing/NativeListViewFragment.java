@@ -15,13 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.mopub.nativeads.FacebookAdRenderer;
-import com.mopub.nativeads.FlurryNativeAdRenderer;
-import com.mopub.nativeads.FlurryViewBinder;
 import com.mopub.nativeads.GooglePlayServicesAdRenderer;
-import com.mopub.nativeads.MediaViewBinder;
+import com.mopub.nativeads.GooglePlayServicesViewBinder;
 import com.mopub.nativeads.MoPubAdAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
-import com.mopub.nativeads.MoPubVideoNativeAdRenderer;
 import com.mopub.nativeads.PangleAdRenderer;
 import com.mopub.nativeads.PangleAdViewBinder;
 import com.mopub.nativeads.RequestParameters;
@@ -29,8 +26,6 @@ import com.mopub.nativeads.VerizonNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.mopub.nativeads.MoPubNativeAdPositioning.MoPubServerPositioning;
 import static com.mopub.nativeads.RequestParameters.NativeAdAsset;
@@ -86,19 +81,7 @@ public class NativeListViewFragment extends Fragment {
                         .sponsoredTextId(R.id.native_sponsored_text_view)
                         .build());
 
-        // Set up a renderer for a video native ad.
-        final MoPubVideoNativeAdRenderer videoAdRenderer = new MoPubVideoNativeAdRenderer(
-                new MediaViewBinder.Builder(R.layout.video_ad_list_item)
-                        .titleId(R.id.native_title)
-                        .textId(R.id.native_text)
-                        .mediaLayoutId(R.id.native_media_layout)
-                        .iconImageId(R.id.native_icon_image)
-                        .callToActionId(R.id.native_cta)
-                        .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
-                        .sponsoredTextId(R.id.native_sponsored_text_view)
-                        .build());
-
-        // Set up a renderer for Facebook video ads.
+        // Set up a renderer for Facebook ads.
         final FacebookAdRenderer facebookAdRenderer = new FacebookAdRenderer(
                 new FacebookAdRenderer.FacebookViewBinder.Builder(R.layout.native_ad_fan_list_item)
                         .titleId(R.id.native_title)
@@ -109,20 +92,9 @@ public class NativeListViewFragment extends Fragment {
                         .adChoicesRelativeLayoutId(R.id.native_privacy_information_icon_layout)
                         .build());
 
-        // Set up a renderer for Flurry video and static native ads.
-        final FlurryNativeAdRenderer flurryAdRenderer = new FlurryNativeAdRenderer(
-                new FlurryViewBinder.Builder(new ViewBinder.Builder(R.layout.native_ad_flurry_list_item)
-                        .titleId(R.id.flurry_native_title)
-                        .textId(R.id.flurry_native_text)
-                        .mainImageId(R.id.flurry_native_main_image)
-                        .iconImageId(R.id.flurry_native_icon_image)
-                        .callToActionId(R.id.flurry_native_cta)
-                        .privacyInformationIconImageId(R.id.flurry_native_privacy_information_icon_image)
-                        .build()).videoViewId(R.id.flurry_native_video_view).build());
-
         // Set up a renderer for AdMob ads.
         final GooglePlayServicesAdRenderer googlePlayServicesAdRenderer = new GooglePlayServicesAdRenderer(
-                new MediaViewBinder.Builder(R.layout.video_ad_list_item)
+                new GooglePlayServicesViewBinder.Builder(R.layout.video_ad_list_item)
                         .titleId(R.id.native_title)
                         .textId(R.id.native_text)
                         .mediaLayoutId(R.id.native_media_layout)
@@ -158,9 +130,7 @@ public class NativeListViewFragment extends Fragment {
         mAdAdapter.registerAdRenderer(verizonNativeAdRenderer);
         mAdAdapter.registerAdRenderer(googlePlayServicesAdRenderer);
         mAdAdapter.registerAdRenderer(facebookAdRenderer);
-        mAdAdapter.registerAdRenderer(flurryAdRenderer);
         mAdAdapter.registerAdRenderer(staticAdRender);
-        mAdAdapter.registerAdRenderer(videoAdRenderer);
         mAdAdapter.registerAdRenderer(pangleAdRenderer);
         listView.setAdapter(mAdAdapter);
 

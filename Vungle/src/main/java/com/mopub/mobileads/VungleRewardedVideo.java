@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
+import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_ATTEMPTED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
@@ -213,6 +214,18 @@ public class VungleRewardedVideo extends BaseAd {
             modifyAdConfig(adConfig, instanceMediationSettings);
         } else if (globalMediationSettings != null) {
             modifyAdConfig(adConfig, globalMediationSettings);
+        } else if (!TextUtils.isEmpty(VungleAdapterConfiguration.getWithAutoRotate())) {
+            final String adOrientation = VungleAdapterConfiguration.getWithAutoRotate();
+
+            if (!TextUtils.isEmpty(adOrientation)) {
+                try {
+                    if (adConfig != null) {
+                        adConfig.setAdOrientation(Integer.parseInt(adOrientation));
+                    }
+                } catch (NumberFormatException e) {
+                    MoPubLog.log(getAdNetworkId(), CUSTOM_WITH_THROWABLE, "Unable to pass with_auto_rotate value due to " + e);
+                }
+            }
         }
     }
 
@@ -227,7 +240,6 @@ public class VungleRewardedVideo extends BaseAd {
         sVungleRouter.setIncentivizedFields(userId, mediationSettings.getTitle(), mediationSettings.getBody(),
                 mediationSettings.getKeepWatchingButtonText(), mediationSettings.getCloseButtonText());
         adConfig.setMuted(mediationSettings.isStartMuted());
-        adConfig.setFlexViewCloseTime(mediationSettings.getFlexViewCloseTimeInSec());
         adConfig.setOrdinal(mediationSettings.getOrdinalViewCount());
         adConfig.setAdOrientation(mediationSettings.getAdOrientation());
     }
@@ -291,10 +303,21 @@ public class VungleRewardedVideo extends BaseAd {
 
                 if (mInteractionListener != null) {
                     mInteractionListener.onAdShown();
-                    mInteractionListener.onAdImpression();
                 }
 
                 MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
+            }
+        }
+
+        @Override
+        public void onAdViewed(@NonNull String placementReferenceId) {
+
+            if (mPlacementId.equals(placementReferenceId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdViewed - Placement ID: " + placementReferenceId);
+
+                if (mInteractionListener != null) {
+                    mInteractionListener.onAdImpression();
+                }
             }
         }
 
@@ -391,12 +414,6 @@ public class VungleRewardedVideo extends BaseAd {
             @Override
             public Builder withStartMuted(boolean isStartMuted) {
                 super.withStartMuted(isStartMuted);
-                return this;
-            }
-
-            @Override
-            public Builder withFlexViewCloseTimeInSec(int flexViewCloseTimeInSec) {
-                super.withFlexViewCloseTimeInSec(flexViewCloseTimeInSec);
                 return this;
             }
 

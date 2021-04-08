@@ -262,10 +262,26 @@ public class VungleInterstitial extends BaseAd {
                     public void run() {
                         if (mInteractionListener != null) {
                             mInteractionListener.onAdShown();
-                            mInteractionListener.onAdImpression();
                         }
 
                         MoPubLog.log(getAdNetworkId(), SHOW_SUCCESS, ADAPTER_NAME);
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void onAdViewed(@NonNull String placementReferenceId) {
+
+            if (mPlacementId.equals(placementReferenceId)) {
+                MoPubLog.log(getAdNetworkId(), CUSTOM, ADAPTER_NAME, "onAdViewed - Placement ID: " + placementReferenceId);
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mInteractionListener != null) {
+                            mInteractionListener.onAdImpression();
+                        }
                     }
                 });
             }
@@ -281,8 +297,16 @@ public class VungleInterstitial extends BaseAd {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (mInteractionListener != null) {
+                        if (mInteractionListener == null && mLoadListener != null) {
+                            mLoadListener.onAdLoadFailed(MoPubErrorCode.NETWORK_NO_FILL);
+                            MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
+                                    MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
+                                    MoPubErrorCode.NETWORK_NO_FILL);
+                        } else if (mInteractionListener != null) {
                             mInteractionListener.onAdFailed(MoPubErrorCode.NETWORK_NO_FILL);
+                            MoPubLog.log(getAdNetworkId(), SHOW_FAILED, ADAPTER_NAME,
+                                    MoPubErrorCode.NETWORK_NO_FILL.getIntCode(),
+                                    MoPubErrorCode.NETWORK_NO_FILL);
                         }
 
                         MoPubLog.log(getAdNetworkId(), LOAD_FAILED, ADAPTER_NAME,
