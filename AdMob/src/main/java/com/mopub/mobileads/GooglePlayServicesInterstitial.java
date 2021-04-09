@@ -182,6 +182,12 @@ public class GooglePlayServicesInterstitial extends BaseAd {
 
                         if (mInteractionListener != null) {
                             mInteractionListener.onAdShown();
+                        }
+                    }
+
+                    @Override
+                    public void onAdImpression() {
+                        if (mInteractionListener != null) {
                             mInteractionListener.onAdImpression();
                         }
                     }
