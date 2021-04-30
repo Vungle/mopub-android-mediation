@@ -1,4 +1,15 @@
 ## Changelog
+  * 19.8.0.0
+    * This version of the adapters has been certified with AdMob 19.8.0 and MoPub 5.16.3.
+    * Align impression tracking for non-native ad formats based on Google's `onAdImpression()` callback.
+
+  * 19.7.0.1
+    * Service release. No code changes.
+
+  * 19.7.0.0
+    * This version of the adapters has been certified with AdMob 19.7.0 and MoPub 5.16.0.
+    * Refactor interstitial, rewarded video, and native based on new API guidelines from Google. No action items for publishers.
+
   * 19.6.0.2
     * Make `GooglePlayServicesNativeAd.java` public, and update the deprecated usage of `setMediaAspectRatio()` and `NativeAdOptions` orientations.
 

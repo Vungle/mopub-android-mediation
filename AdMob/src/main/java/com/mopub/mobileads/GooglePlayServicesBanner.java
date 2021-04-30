@@ -183,6 +183,13 @@ public class GooglePlayServicesBanner extends BaseAd {
 
     private class AdViewListener extends AdListener {
         @Override
+        public void onAdImpression() {
+            if (mInteractionListener != null) {
+                mInteractionListener.onAdImpression();
+            }
+        }
+
+        @Override
         public void onAdClosed() {
         }
 
