@@ -3,9 +3,6 @@ package com.mopub.mobileads;
 import android.app.Activity;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.mopub.common.BaseLifecycleListener;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPub;
@@ -29,6 +26,10 @@ import com.vungle.warren.error.VungleException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
@@ -62,6 +63,7 @@ public class VungleRouter {
         }
     };
     private static final VungleRouter sInstance = new VungleRouter();
+
     private static SDKInitState sInitState = SDKInitState.NOTINITIALIZED;
     private final static Map<String, VungleRouterListener> sVungleRouterListeners = new HashMap<>();
     private final static Map<AdRequest, VungleRouterListener> sWaitingList = new HashMap<>();
@@ -71,32 +73,37 @@ public class VungleRouter {
         private final String placementId;
         @Nullable
         private final String adMarkup;
+        @NonNull
+        private AdSize adSize = AdSize.VUNGLE_DEFAULT;
 
         public AdRequest(@NonNull String placementId, @Nullable String adMarkup) {
             this.placementId = placementId;
             this.adMarkup = adMarkup;
         }
 
-        @Override
-        public int hashCode() {
-            int result = placementId.hashCode();
-            result = 31 * result + (adMarkup != null ? adMarkup.hashCode() : 0);
-            return result;
+        public AdRequest(@NonNull String placementId, @Nullable String adMarkup, @NonNull AdSize adSize) {
+            this.placementId = placementId;
+            this.adMarkup = adMarkup;
+            this.adSize = adSize;
         }
 
         @Override
-        public boolean equals(@Nullable Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AdRequest adRequest = (AdRequest) o;
+            return placementId.equals(adRequest.placementId) &&
+                    Objects.equals(adMarkup, adRequest.adMarkup) &&
+                    adSize == adRequest.adSize;
+        }
 
-            AdRequest request = (AdRequest) obj;
-
-            if (!placementId.equals(request.placementId)) return false;
-            return adMarkup != null ? adMarkup.equals(request.adMarkup) : request.adMarkup == null;
+        @Override
+        public int hashCode() {
+            return Objects.hash(placementId, adMarkup, adSize);
         }
     }
 
-    private enum SDKInitState {
+    protected enum SDKInitState {
         NOTINITIALIZED,
         INITIALIZING,
         INITIALIZED
@@ -218,7 +225,7 @@ public class VungleRouter {
                 break;
 
             case INITIALIZING:
-                AdRequest adRequest = new AdRequest(placementId, adMarkup);
+                AdRequest adRequest = new AdRequest(placementId, adMarkup, adSize);
                 sWaitingList.put(adRequest, routerListener);
                 break;
 
@@ -280,7 +287,11 @@ public class VungleRouter {
     private void clearWaitingList() {
         for (Map.Entry<AdRequest, VungleRouterListener> entry : sWaitingList.entrySet()) {
             AdRequest request = entry.getKey();
-            Vungle.loadAd(request.placementId, request.adMarkup, null, loadAdCallback);
+            if(AdSize.isNonMrecBannerAdSize(request.adSize)) {
+                Vungle.loadAd(request.placementId, request.adMarkup, null, loadAdCallback);
+            } else {
+                Banners.loadBanner(request.placementId, request.adMarkup, request.adSize, loadAdCallback);
+            }
             sVungleRouterListeners.put(request.placementId, entry.getValue());
         }
 
@@ -468,5 +479,9 @@ public class VungleRouter {
             default:
                 return UNSPECIFIED;
         }
+    }
+
+    protected void setsInitState(SDKInitState sInitState) {
+        VungleRouter.sInitState = sInitState;
     }
 }
