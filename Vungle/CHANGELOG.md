@@ -1,4 +1,8 @@
 ## Changelog
+  * 6.10.1.0
+    * This version of the adapters has been certified with Vungle 6.10.1 and MoPub SDK 5.17.0.
+    * `getAvailableBidTokens()` API replaced with `getAvailableBidTokensBySize()`.
+
   * 6.9.1.0
     * This version of the adapters has been certified with Vungle 6.9.1 and MoPub SDK 5.15.0.
     * Pass the context to Vungle's `getAvailableBidTokens()` API.
